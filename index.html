@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md. Miner Hossain Rimon — AI Automation Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg:           #04060f;
+            --surface:      rgba(255,255,255,0.03);
+            --surface2:     rgba(255,255,255,0.06);
+            --border:       rgba(255,255,255,0.08);
+            --border-green: rgba(0,255,136,0.35);
+            --border-blue:  rgba(59,130,246,0.3);
+            --border-pink:  rgba(244,114,182,0.35);
+            --green:  #00ff88;
+            --blue:   #3b82f6;
+            --pink:   #f472b6;
+            --text:   #f0f4ff;
+            --muted:  #6b7a99;
+            --dim:    #3d4a66;
+            --font-display: 'Clash Display', 'Segoe UI', sans-serif;
+            --font-body:    'Cabinet Grotesk', 'Segoe UI', sans-serif;
+            --font-serif:   'Instrument Serif', Georgia, serif;
+            --font-mono:    'Fira Code', 'Courier New', monospace;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+        body.modal-open { overflow: hidden; }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025; pointer-events: none; z-index: 100;
+        }
+        .glow-1, .glow-2, .glow-3 { position: fixed; border-radius: 50%; pointer-events: none; filter: blur(130px); z-index: 0; }
+        .glow-1 { width: 500px; height: 500px; background: rgba(0,255,136,0.06);   top: -150px; right: -150px; }
+        .glow-2 { width: 600px; height: 600px; background: rgba(59,130,246,0.05);  bottom: 0; left: -200px; }
+        .glow-3 { width: 400px; height: 400px; background: rgba(244,114,182,0.04); top: 40%; left: 40%; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+
+        /* NAV */
+        nav { position: sticky; top: 0; z-index: 50; padding: 1.25rem 0; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); background: rgba(4,6,15,0.75); }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--green); letter-spacing: -0.02em; text-decoration: none; }
+        .logo span { color: var(--muted); font-weight: 400; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-family: var(--font-body); color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.02em; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+
+        /* HERO */
+        .hero { padding: 8rem 0 6rem; position: relative; }
+        .hero-inner { display: flex; align-items: center; justify-content: space-between; gap: 4rem; }
+        .hero-content { flex: 1; min-width: 0; }
+        .hero-photo-wrap { flex-shrink: 0; position: relative; opacity: 0; animation: fadeUp 0.9s ease forwards 0.85s; }
+        .hero-photo-wrap::before { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: var(--green); z-index: -1; }
+        .hero-photo-wrap::after { content: ''; position: absolute; inset: -22px; border-radius: 50%; background: radial-gradient(circle, rgba(0,255,136,0.12), transparent 70%); z-index: -2; pointer-events: none; }
+        .hero-photo { width: 320px; height: 320px; border-radius: 50%; object-fit: cover; object-position: top center; display: block; border: 4px solid var(--bg); position: relative; z-index: 1; }
+        @media (max-width: 860px) { .hero-inner { flex-direction: column-reverse; gap: 2.5rem; align-items: flex-start; } .hero-photo { width: 180px; height: 180px; } }
+        .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.95rem; background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); border-radius: 100px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--green); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.1s; }
+        .status-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; flex-shrink: 0; animation: statusPulse 2s infinite; }
+        @keyframes statusPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); } 60% { box-shadow: 0 0 0 6px rgba(0,255,136,0); } }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.78rem; color: var(--green); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.25s; }
+        .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--green); flex-shrink: 0; }
+        h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 1.5rem; color: var(--text); opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s; }
+        h1 .accent { color: var(--green); }
+        .hero-subtitle { font-family: var(--font-body); font-style: normal; font-size: 1.15rem; color: var(--muted); max-width: 560px; line-height: 1.8; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.55s; }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.7s; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.9rem; font-family: var(--font-body); font-size: 0.92rem; font-weight: 700; text-decoration: none; border-radius: 7px; transition: all 0.2s ease; cursor: pointer; border: none; letter-spacing: 0.01em; }
+        .btn-primary { background: var(--green); color: #04060f; }
+        .btn-primary:hover { background: #00e07a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,255,136,0.2); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+
+        /* SECTIONS */
+        section { padding: 7rem 0; }
+        .section-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+        .section-label::after { content: ''; width: 48px; height: 1px; background: var(--green); opacity: 0.4; }
+        .section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+        .section-desc { font-family: var(--font-body); font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.75; margin-bottom: 3.5rem; }
+        .section-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+
+        /* EXPERIENCE */
+        .exp-card { border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; background: var(--surface); transition: border-color 0.3s, background 0.3s; position: relative; overflow: hidden; }
+        .exp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--blue)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .exp-card:hover { border-color: var(--border-green); background: var(--surface2); }
+        .exp-card:hover::before { transform: scaleX(1); }
+        .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+        .exp-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text); }
+        .exp-period { font-family: var(--font-mono); font-size: 0.78rem; color: var(--green); padding: 0.3rem 0.85rem; background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.18); border-radius: 100px; white-space: nowrap; }
+        .exp-company { font-family: var(--font-body); color: var(--muted); font-size: 0.95rem; font-weight: 500; margin-bottom: 1.25rem; }
+        .exp-desc { font-family: var(--font-body); color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+        /* TAGS */
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag { padding: 0.3rem 0.85rem; font-family: var(--font-mono); font-size: 0.78rem; border-radius: 6px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.18); color: #93c5fd; transition: all 0.2s; }
+        .tag.green { background: rgba(0,255,136,0.07); border-color: rgba(0,255,136,0.18); color: #6ee7b7; }
+
+        /* PROJECTS GRID */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* PROJECT CARD */
+        .project-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .project-card::after {
+            content: '';
+            position: absolute; inset: 0; border-radius: 12px;
+            background: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.05), transparent 65%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .project-card:hover { border-color: var(--border-green); transform: translateY(-5px); box-shadow: 0 24px 52px rgba(0,0,0,0.4); }
+        .project-card:hover::after { opacity: 1; }
+
+        /* Thumbnail */
+        .project-thumb {
+            width: 100%; height: 170px;
+            object-fit: cover; object-position: top;
+            display: block;
+            border-bottom: 1px solid var(--border);
+            transition: object-position 0.7s ease;
+            flex-shrink: 0;
+        }
+        .project-card:hover .project-thumb { object-position: bottom; }
+
+        /* Card body */
+        .project-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+        .project-number { font-family: var(--font-mono); font-size: 0.68rem; color: var(--dim); letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+        .project-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; line-height: 1.25; }
+        .project-desc { font-family: var(--font-body); color: var(--muted); font-size: 0.88rem; line-height: 1.7; flex: 1; margin-bottom: 1rem; }
+        .project-footer-inner { margin-top: auto; }
+        .view-hint { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--dim); transition: color 0.2s; }
+        .view-hint::before { content: '→'; }
+        .project-card:hover .view-hint { color: var(--green); }
+
+        /* PUBLICATION */
+        .pub-card { border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; background: var(--surface); transition: all 0.3s; display: flex; gap: 2rem; align-items: flex-start; text-decoration: none; color: inherit; cursor: pointer; }
+        .pub-card:hover { border-color: var(--border-pink); background: var(--surface2); transform: translateY(-2px); }
+        .pub-icon { width: 50px; height: 50px; border-radius: 10px; background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.4rem; }
+        .pub-body { flex: 1; }
+        .pub-meta { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .pub-source { font-family: var(--font-mono); font-size: 0.73rem; padding: 0.25rem 0.7rem; background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.2); color: var(--pink); border-radius: 100px; }
+        .pub-date { font-family: var(--font-body); color: var(--muted); font-size: 0.85rem; }
+        .pub-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; line-height: 1.4; }
+        .pub-desc { font-family: var(--font-body); color: var(--muted); font-size: 0.92rem; line-height: 1.75; }
+        .pub-link { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--pink); font-family: var(--font-body); font-size: 0.88rem; font-weight: 700; margin-top: 1rem; transition: gap 0.2s; }
+        .pub-card:hover .pub-link { gap: 0.75rem; }
+
+        /* EDUCATION */
+        .edu-card { border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2.5rem; background: var(--surface); margin-bottom: 1.25rem; transition: border-color 0.3s; display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .edu-card:hover { border-color: var(--border-blue); }
+        .edu-degree { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+        .edu-school { font-family: var(--font-body); color: #93c5fd; font-size: 0.92rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .edu-period { font-family: var(--font-mono); color: var(--muted); font-size: 0.82rem; }
+
+        /* CERTIFICATIONS */
+        .cert-card { border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2.5rem; background: var(--surface); transition: border-color 0.3s; display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .cert-card:hover { border-color: var(--border-green); }
+        .cert-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+        .cert-issuer { font-family: var(--font-body); color: var(--muted); font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .cert-id { font-family: var(--font-mono); color: var(--dim); font-size: 0.78rem; }
+        .cert-badge { padding: 0.4rem 0.95rem; background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); border-radius: 100px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--green); white-space: nowrap; }
+
+        /* CONTACT */
+        .contact-section { padding: 7rem 0; border-top: 1px solid var(--border); }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+        .contact-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; background: var(--surface); text-align: center; transition: all 0.3s; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+        .contact-card:hover { border-color: var(--border-green); background: var(--surface2); transform: translateY(-3px); }
+        .contact-icon { width: 48px; height: 48px; border-radius: 10px; background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .contact-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+        .contact-value { font-family: var(--font-body); font-size: 0.95rem; color: var(--text); font-weight: 600; }
+
+        /* FOOTER */
+        footer { padding: 0; border-top: 1px solid var(--border); background: linear-gradient(180deg, transparent, rgba(0,255,136,0.02)); }
+        .footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 3rem; padding: 4rem 0 3rem; }
+        .footer-brand { display: flex; flex-direction: column; gap: 1rem; }
+        .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--green); letter-spacing: -0.03em; }
+        .footer-logo span { color: var(--muted); font-weight: 400; }
+        .footer-tagline { font-family: var(--font-body); color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+        .footer-social { display: flex; gap: 0.6rem; margin-top: 0.5rem; }
+        .social-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; }
+        .social-btn:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); transform: translateY(-2px); }
+        .footer-links-col { display: flex; flex-direction: column; gap: 0.65rem; }
+        .footer-col-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--green); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.35rem; }
+        .footer-link { font-family: var(--font-body); color: var(--muted); font-size: 0.88rem; text-decoration: none; transition: color 0.2s; width: fit-content; }
+        .footer-link:hover { color: var(--text); }
+        .footer-tech { font-family: var(--font-mono); color: var(--dim); font-size: 0.82rem; transition: color 0.2s; }
+        .footer-tech:hover { color: var(--muted); }
+        .footer-status-item { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-body); font-size: 0.85rem; color: var(--muted); }
+        .status-dot-sm { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .status-dot-sm.green { background: var(--green); box-shadow: 0 0 6px rgba(0,255,136,0.5); }
+        .status-dot-sm.blue  { background: var(--blue);  box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+        .status-dot-sm.pink  { background: var(--pink);  box-shadow: 0 0 6px rgba(244,114,182,0.5); }
+        .footer-bottom { border-top: 1px solid var(--border); padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+        .footer-copy { font-family: var(--font-mono); color: var(--dim); font-size: 0.78rem; }
+        .footer-made { font-family: var(--font-mono); color: var(--dim); font-size: 0.78rem; }
+        .footer-made span { color: var(--green); }
+        .footer-heart { color: var(--pink); }
+        @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+        @media (max-width: 550px) { .footer-top { grid-template-columns: 1fr; } .footer-bottom { justify-content: center; text-align: center; } }
+
+        /* MODAL */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(4,6,15,0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .modal { background: #080d1e; border: 1px solid rgba(0,255,136,0.2); border-radius: 16px; width: 100%; max-width: 760px; max-height: 88vh; overflow-y: auto; position: relative; transform: translateY(30px) scale(0.97); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(0,255,136,0.05); }
+        .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-track { background: transparent; }
+        .modal::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 10px; }
+        .modal-top-bar { height: 3px; background: linear-gradient(90deg, var(--green), var(--blue), var(--pink)); border-radius: 16px 16px 0 0; }
+        .modal-body { padding: 2.25rem 2.75rem 2.75rem; }
+        .modal-close { position: absolute; top: 1.25rem; right: 1.5rem; width: 32px; height: 32px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .modal-close:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); }
+        .modal-number { font-family: var(--font-mono); font-size: 0.7rem; color: var(--dim); letter-spacing: 0.12em; margin-bottom: 0.75rem; }
+        .modal-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1.1rem; line-height: 1.1; }
+        .modal-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
+        .modal-divider { height: 1px; background: var(--border); margin-bottom: 1.75rem; }
+        .modal-desc { font-family: var(--font-body); font-size: 1rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.75rem; }
+        .modal-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.75rem; }
+        .modal-meta-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.4rem; }
+        .modal-meta-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.35rem; }
+        .modal-meta-value { font-family: var(--font-body); font-size: 0.92rem; color: var(--text); font-weight: 600; }
+        .modal-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .modal-placeholder { text-align: center; padding: 2.5rem 0 1rem; }
+        .modal-placeholder-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.3; }
+        .modal-placeholder-text { font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; color: var(--dim); }
+        .gallery-main { width: 100%; border-radius: 10px; border: 1px solid var(--border); display: block; margin-bottom: 0.65rem; max-height: 380px; object-fit: cover; object-position: top; transition: opacity 0.2s ease; }
+        .gallery-strip { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+        .gallery-thumb { width: 75px; height: 52px; object-fit: cover; object-position: top; border-radius: 6px; border: 2px solid var(--border); cursor: pointer; transition: border-color 0.2s, opacity 0.2s; opacity: 0.5; }
+        .gallery-thumb:hover { opacity: 0.85; border-color: var(--muted); }
+        .gallery-thumb.gallery-active { border-color: var(--green); opacity: 1; }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .nav-links { gap: 1.5rem; } .hero { padding: 5rem 0 4rem; } .pub-card { flex-direction: column; gap: 1rem; } .edu-card, .cert-card { flex-direction: column; align-items: flex-start; } .footer-inner { justify-content: center; text-align: center; } .modal-body { padding: 1.75rem 1.5rem 2rem; } .modal-meta-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .projects-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { h1 { font-size: 2.6rem; } }
+
+        /* HAMBURGER MENU */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; z-index: 60; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--green); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--green); }
+        @media (max-width: 640px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                display: flex !important;
+                flex-direction: column;
+                position: fixed;
+                top: 0; left: 0; right: 0;
+                background: rgba(4,6,15,0.97);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-bottom: 1px solid rgba(0,255,136,0.25);
+                padding: 4.5rem 2rem 2.5rem;
+                gap: 0;
+                z-index: 55;
+                transform: translateY(-110%);
+                transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+                pointer-events: none;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            }
+            .nav-links.mobile-open { transform: translateY(0); pointer-events: all; }
+            .nav-links li { border-bottom: 1px solid var(--border); }
+            .nav-links li:last-child { border-bottom: none; }
+            .nav-links a { display: block; padding: 1rem 0; font-size: 1rem; color: var(--muted); }
+            .nav-links a:hover, .nav-links a:active { color: var(--green); }
+        }
+    </style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+<div class="glow-3"></div>
+
+<!-- CERT MODAL -->
+<div class="modal-backdrop" id="cert-modal-backdrop" onclick="closeCertModal()" style="z-index:300;">
+    <div class="modal" id="cert-modal" style="max-width:960px;" onclick="event.stopPropagation()">
+        <div class="modal-top-bar"></div>
+        <button class="modal-close" onclick="closeCertModal()">✕</button>
+        <div class="modal-body" id="cert-modal-body"></div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+    <div class="modal" id="modal">
+        <div class="modal-top-bar"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<!-- NAV -->
+<nav>
+    <div class="container">
+        <div class="nav-inner">
+            <a href="portfolio.html" class="logo">Rimon<span>.dev</span></a>
+            <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="education.html">Education</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="status-badge"><span class="status-dot"></span>Available for opportunities</div>
+                <div class="hero-eyebrow">AI Automation Developer · ML Researcher</div>
+                <h1>Md. Miner<br>Hossain <span class="accent">Rimon</span></h1>
+                <p class="hero-subtitle">Building intelligent automation systems and ML solutions that transform how businesses operate — specializing in workflow automation, no-code AI, and predictive modeling.</p>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn btn-primary">Get In Touch →</a>
+                    <a href="mhr_cv.pdf" download="Md_Miner_Hossain_Rimon_CV.pdf" class="btn btn-outline" style="border-color:var(--green);color:var(--green);">↓ Download CV</a>
+                    <a href="https://github.com/Miner1033" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+                    <a href="https://www.linkedin.com/in/md-miner-hossain-rimon-831490327/" target="_blank" rel="noopener" class="btn btn-outline">LinkedIn ↗</a>
+                </div>
+            </div>
+            <div class="hero-photo-wrap">
+                <img class="hero-photo" src="rimon_dp.jpg" alt="Md. Miner Hossain Rimon">
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+        <div class="section-label">Professional Journey</div>
+        <h2 class="section-title">Experience</h2>
+        <p class="section-desc">Designing and deploying intelligent automation systems that enhance productivity at scale.</p>
+        <div class="exp-card fade-up">
+            <div class="exp-header">
+                <div>
+                    <div class="exp-title">AI Automation Developer</div>
+                    <div class="exp-company">Gen Z IT Zone &nbsp;·&nbsp; Internship</div>
+                </div>
+                <span class="exp-period">Dec 2025 — Present</span>
+            </div>
+            <p class="exp-desc">Designing and implementing automation workflows to streamline business processes. Working with cutting-edge tools to create intelligent systems that enhance productivity and efficiency across the organization.</p>
+            <div class="tags">
+                <span class="tag">Langflow</span>
+                <span class="tag">Zapier</span>
+                <span class="tag">n8n</span>
+                <span class="tag green">AI Workflows</span>
+                <span class="tag green">Process Automation</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="section-label">Portfolio</div>
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-desc">AI automation solutions built to save time, reduce manual work, and scale intelligently.</p>
+
+        <div class="projects-grid">
+
+            <!-- 01: Find Your Professor -->
+            <div class="project-card fade-up" onclick="openModal(this)">
+                <img src="find4.jpg" alt="Find Your Professor" class="project-thumb">
+                <div class="project-body">
+                    <div class="project-number">01 / AI AUTOMATION</div>
+                    <div class="project-title">Find Your Professor</div>
+                    <p class="project-desc">A SaaS tool that helps students discover professors by research field & location — top 10 results with profile URLs, downloadable as CSV/Excel.</p>
+                    <div class="project-footer-inner">
+                        <div class="tags">
+                            <span class="tag">n8n</span>
+                            <span class="tag">Apify</span>
+                            <span class="tag green">AI Automation</span>
+                            <span class="tag green">SaaS</span>
+                        </div>
+                        <div class="view-hint">View details</div>
+                    </div>
+                </div>
+                <script type="application/json" class="modal-data">{
+                    "number": "01 / AI AUTOMATION",
+                    "title": "Find Your Professor — by MHR",
+                    "tags": [
+                        {"label": "n8n", "type": "blue"},
+                        {"label": "Apify", "type": "blue"},
+                        {"label": "Google Search Nodes", "type": "blue"},
+                        {"label": "Lovable", "type": "blue"},
+                        {"label": "AI Automation", "type": "green"},
+                        {"label": "SaaS", "type": "green"},
+                        {"label": "Web Scraping", "type": "green"}
+                    ],
+                    "desc": "Endless Google searches, scattered university pages, and no clear direction — that's the problem Find Your Professor solves.\n\nA simple SaaS tool that helps students discover professors based on research field and location.\n\n🚀 How it works — Just type one search like:\n👉 AI / ML Professor – Dhaka\n👉 Cyber Security Professor – Germany\n\n✅ You instantly get:\n• Top 10 relevant professor results\n• Professor name & research area\n• University name & official profile URL\n• Location-based filtering\n• Download all results as CSV or Excel sheet\n\n🛠 Built With n8n, Apify, Google Search nodes, and Lovable to automate professor discovery and convert search data into structured, downloadable results.",
+                    "meta": [
+                        {"label": "Type", "value": "SaaS / AI Automation"},
+                        {"label": "Stack", "value": "n8n, Apify, Lovable"},
+                        {"label": "Output", "value": "CSV & Excel Download"},
+                        {"label": "Status", "value": "Completed"}
+                    ],
+                    "images": ["find4.jpg", "find1.jpg", "find2.jpg", "find3.jpg"],
+                    "video": "find5.mp4",
+                    "placeholder": false
+                }</script>
+            </div>
+
+            <!-- 02: AI Agent with RAG -->
+            <div class="project-card fade-up" style="transition-delay:0.1s" onclick="openModal(this)">
+                <img src="rag2.jpg" alt="AI Agent with RAG" class="project-thumb">
+                <div class="project-body">
+                    <div class="project-number">02 / AI AUTOMATION</div>
+                    <div class="project-title">AI Agent with RAG</div>
+                    <p class="project-desc">Fully automated AI query system — Lovable form → Webhook → Pinecone RAG → OpenAI response → Gmail reply → Google Sheets log.</p>
+                    <div class="project-footer-inner">
+                        <div class="tags">
+                            <span class="tag">n8n</span>
+                            <span class="tag">OpenAI</span>
+                            <span class="tag">Pinecone</span>
+                            <span class="tag green">RAG</span>
+                            <span class="tag green">AI Automation</span>
+                        </div>
+                        <div class="view-hint">View details</div>
+                    </div>
+                </div>
+                <script type="application/json" class="modal-data">{
+                    "number": "02 / AI AUTOMATION",
+                    "title": "AI Agent with RAG (Retrieval-Augmented Generation)",
+                    "tags": [
+                        {"label": "n8n", "type": "blue"},
+                        {"label": "OpenAI", "type": "blue"},
+                        {"label": "Pinecone", "type": "blue"},
+                        {"label": "Lovable", "type": "blue"},
+                        {"label": "Gmail", "type": "blue"},
+                        {"label": "Google Sheets", "type": "blue"},
+                        {"label": "RAG", "type": "green"},
+                        {"label": "AI Automation", "type": "green"}
+                    ],
+                    "desc": "An AI-powered query handling system built end-to-end with full automation.\n\n🔄 How the pipeline works:\n• User submits a query through a Lovable form\n• Request is received via Webhook trigger in n8n\n• RAG pipeline retrieves relevant context from Pinecone Vector Store\n• OpenAI generates accurate, context-aware responses\n• Automated email replies are sent via Gmail\n• All queries and responses are logged in Google Sheets\n\nThe knowledge base is built automatically — when a new file is added to Google Drive, it is downloaded, embedded via OpenAI Embeddings, and stored in Pinecone for future retrieval.\n\nBuilt for smart customer support, faster responses, and scalable AI automation.",
+                    "meta": [
+                        {"label": "Type", "value": "AI Automation / RAG"},
+                        {"label": "Stack", "value": "n8n, OpenAI, Pinecone"},
+                        {"label": "Integrations", "value": "Gmail, Google Sheets, Drive"},
+                        {"label": "Status", "value": "Completed"}
+                    ],
+                    "images": ["rag2.jpg", "rag3.jpg", "rag1.jpg"],
+                    "placeholder": false
+                }</script>
+            </div>
+
+            <!-- 03: RAG with LangFlow -->
+            <div class="project-card fade-up" style="transition-delay:0.2s" onclick="openModal(this)">
+                <img src="lrag.jpg" alt="RAG Pipeline LangFlow" class="project-thumb">
+                <div class="project-body">
+                    <div class="project-number">03 / AI AUTOMATION</div>
+                    <div class="project-title">RAG Pipeline — LangFlow</div>
+                    <p class="project-desc">LangFlow RAG pipeline that turns PDFs into conversational knowledge bases using Astra DB, OpenAI Embeddings & GPT-4o-mini.</p>
+                    <div class="project-footer-inner">
+                        <div class="tags">
+                            <span class="tag">LangFlow</span>
+                            <span class="tag">Astra DB</span>
+                            <span class="tag green">RAG</span>
+                            <span class="tag green">GPT-4o-mini</span>
+                        </div>
+                        <div class="view-hint">View details</div>
+                    </div>
+                </div>
+                <script type="application/json" class="modal-data">{
+                    "number": "03 / AI AUTOMATION",
+                    "title": "RAG Pipeline with LangFlow",
+                    "tags": [
+                        {"label": "LangFlow", "type": "blue"},
+                        {"label": "OpenAI", "type": "blue"},
+                        {"label": "Astra DB", "type": "blue"},
+                        {"label": "GPT-4o-mini", "type": "blue"},
+                        {"label": "RAG", "type": "green"},
+                        {"label": "AI Automation", "type": "green"},
+                        {"label": "Vector Search", "type": "green"}
+                    ],
+                    "desc": "A powerful RAG pipeline using LangFlow that turns PDFs into conversational knowledge bases.\n\n🔁 Workflow steps:\n\n1️⃣ Read File — Extracts raw text from uploaded PDF documents\n2️⃣ Split Text — Chunks content (Size: 1000, Overlap: 200)\n3️⃣ OpenAI Embeddings — Generates semantic vectors using text-embedding-3-small\n4️⃣ Astra DB — Stores embeddings and handles semantic search queries\n5️⃣ Prompt Template — Injects retrieved context and question into a structured prompt\n6️⃣ GPT-4o-mini — Generates precise, context-aware answers (temperature: 0.1)\n\n✨ Result: Fast and accurate answers from large documents — a strong foundation for AI assistants and document-based chatbots.",
+                    "meta": [
+                        {"label": "Type", "value": "RAG / AI Automation"},
+                        {"label": "Stack", "value": "LangFlow, OpenAI, Astra DB"},
+                        {"label": "Model", "value": "GPT-4o-mini + text-embedding-3-small"},
+                        {"label": "Status", "value": "Completed"}
+                    ],
+                    "images": ["lrag.jpg", "lrag2.jpg", "lrag3.jpg"],
+                    "placeholder": false
+                }</script>
+            </div>
+
+            <!-- 04: Multi-Platform Lead Generation -->
+            <div class="project-card fade-up" style="transition-delay:0.3s" onclick="openModal(this)">
+                <img src="kadommo2.png" alt="Multi-Platform Lead Generation" class="project-thumb">
+                <div class="project-body">
+                    <div class="project-number">05 / AI AUTOMATION</div>
+                    <div class="project-title">Multi-Platform Lead Generation</div>
+                    <p class="project-desc">AI-powered automation collecting company & social media leads from LinkedIn, Twitter, Instagram & Google Maps — with name, email, phone & website.</p>
+                    <div class="project-footer-inner">
+                        <div class="tags">
+                            <span class="tag">n8n</span>
+                            <span class="tag">Lovable</span>
+                            <span class="tag green">Lead Generation</span>
+                            <span class="tag green">AI Automation</span>
+                        </div>
+                        <div class="view-hint">View details</div>
+                    </div>
+                </div>
+                <script type="application/json" class="modal-data">{
+                    "number": "05 / AI AUTOMATION",
+                    "title": "Multi-Platform Lead Generation Automation",
+                    "tags": [
+                        {"label": "n8n", "type": "blue"},
+                        {"label": "Lovable", "type": "blue"},
+                        {"label": "Webhook", "type": "blue"},
+                        {"label": "REST API", "type": "blue"},
+                        {"label": "LinkedIn", "type": "blue"},
+                        {"label": "Twitter / X", "type": "blue"},
+                        {"label": "Instagram", "type": "blue"},
+                        {"label": "Google Maps", "type": "blue"},
+                        {"label": "Lead Generation", "type": "green"},
+                        {"label": "AI Automation", "type": "green"},
+                        {"label": "SaaS", "type": "green"}
+                    ],
+                    "desc": "A fully automated multi-platform lead generation system — Kommodo AI — that collects company and social media leads across major platforms in one place.\n\n🏢 Company Lead Collection:\n• Automated collection of company name, email, website, and phone number via API\n• Filter by Company Location, Industry, Company Size, Annual Revenue, and Specialties/Keywords\n• Results displayed in a structured webhook output table with direct website links\n\n👤 Prospect Search Workflows:\n• Built search automations for LinkedIn, X (Twitter), Instagram, and Google Maps\n• Extracts profile URL, full name, username, and public email when available\n• AI Search bar lets users describe leads in plain language — Kommodo searches across all platforms automatically\n\n🖥️ Frontend (Kommodo AI):\n• Clean dark-themed UI built with Lovable\n• Dual-tab navigation: Prospects and Companies\n• Live backend connection status indicator",
+                    "meta": [
+                        {"label": "Type", "value": "AI Automation / Lead Gen"},
+                        {"label": "Stack", "value": "n8n, Lovable, Webhook API"},
+                        {"label": "Platforms", "value": "LinkedIn, Twitter, Instagram, Google Maps"},
+                        {"label": "Status", "value": "Completed"}
+                    ],
+                    "images": ["kadommo2.png", "kadommo3.png", "kadommo1.png"],
+                    "placeholder": false
+                }</script>
+            </div>
+
+            <!-- 05: Human-in-the-Loop -->
+            <div class="project-card fade-up" style="transition-delay:0.4s" onclick="openModal(this)">
+                <img src="hu1.png" alt="Human-in-the-Loop YouTube to LinkedIn" class="project-thumb">
+                <div class="project-body">
+                    <div class="project-number">14 / AI AUTOMATION</div>
+                    <div class="project-title">Human-in-the-Loop: YouTube → LinkedIn</div>
+                    <p class="project-desc">A scheduled AI pipeline that fetches YouTube videos, summarizes with OpenAI, emails a human for approval, then auto-posts approved content to LinkedIn.</p>
+                    <div class="project-footer-inner">
+                        <div class="tags">
+                            <span class="tag">n8n</span>
+                            <span class="tag">OpenAI</span>
+                            <span class="tag green">Human-in-the-Loop</span>
+                            <span class="tag green">AI Automation</span>
+                        </div>
+                        <div class="view-hint">View details</div>
+                    </div>
+                </div>
+                <script type="application/json" class="modal-data">{
+                    "number": "14 / AI AUTOMATION",
+                    "title": "Human-in-the-Loop: YouTube to LinkedIn Post Automation",
+                    "tags": [
+                        {"label": "n8n", "type": "blue"},
+                        {"label": "OpenAI", "type": "blue"},
+                        {"label": "YouTube API", "type": "blue"},
+                        {"label": "Gmail", "type": "blue"},
+                        {"label": "LinkedIn API", "type": "blue"},
+                        {"label": "JavaScript", "type": "blue"},
+                        {"label": "Human-in-the-Loop", "type": "green"},
+                        {"label": "AI Automation", "type": "green"},
+                        {"label": "Content Automation", "type": "green"}
+                    ],
+                    "desc": "A sophisticated AI automation pipeline that combines AI content generation with human judgment — ensuring every LinkedIn post is reviewed and approved before it goes live.\n\n⏰ Schedule Trigger:\n• Runs automatically on a defined schedule — no manual trigger needed\n\n📺 YouTube Playlist Fetcher:\n• Fetches all videos from a YouTube playlist via the YouTube API\n• Loop Over Items iterates through each video one by one\n\n🤖 AI Agent (OpenAI):\n• First OpenAI agent processes the video transcript and drafts a raw LinkedIn post\n\n📝 Summary Agent (OpenAI):\n• Second agent polishes for LinkedIn — hook, body, hashtags, CTA\n• Ensures tone is professional, engaging, and human-sounding\n\n📧 Human Review — Send Message & Wait:\n• Emails the generated post to a human reviewer and PAUSES the workflow\n• Human replies 'Approve' to publish or 'Reject' to discard\n\n🔵 LinkedIn — Create a Post:\n• If approved, the post is published directly to LinkedIn — zero manual steps",
+                    "meta": [
+                        {"label": "Type", "value": "Human-in-the-Loop Automation"},
+                        {"label": "Stack", "value": "n8n, OpenAI, YouTube, Gmail, LinkedIn"},
+                        {"label": "Pattern", "value": "AI Draft → Human Review → Auto-Publish"},
+                        {"label": "Status", "value": "Completed"}
+                    ],
+                    "images": ["hu1.png"],
+                    "video": ["hu3.webm", "hu2.webm"],
+                    "placeholder": false
+                }</script>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+            <a href="projects.html" class="btn btn-outline" style="border-color: var(--green); color: var(--green);">More Projects ↗</a>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PUBLICATIONS -->
+    <section id="publications">
+        <div class="section-label">Research</div>
+        <h2 class="section-title">Publications</h2>
+        <p class="section-desc">Contributing to the advancement of machine learning through research and applied innovation.</p>
+        <a class="pub-card fade-up" href="https://arxiv.org/abs/2512.02023" target="_blank" rel="noopener">
+            <div class="pub-icon">📄</div>
+            <div class="pub-body">
+                <div class="pub-meta">
+                    <span class="pub-source">arXiv</span>
+                    <span class="pub-date">December 9, 2025</span>
+                </div>
+                <div class="pub-title">An Improved Ensemble-Based Machine Learning Model with Feature Optimization for Early Diabetes Prediction</div>
+                <p class="pub-desc">This study presents an ensemble-based machine learning model for early diabetes prediction using the 2015 BRFSS dataset. Class imbalance was addressed with SMOTE techniques, and feature optimization was applied to enhance prediction accuracy.</p>
+                <div class="pub-link">Read on arXiv →</div>
+            </div>
+        </a>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- EDUCATION -->
+    <section id="education">
+        <div class="section-label">Academic Background</div>
+        <h2 class="section-title">Education</h2>
+        <div class="edu-card fade-up">
+            <div>
+                <div class="edu-degree">Bachelor's in Computer Science &amp; Engineering</div>
+                <div class="edu-school">Leading University</div>
+                <div class="edu-period">Jan 2022 — Mar 2026</div>
+            </div>
+            <div class="tags">
+                <span class="tag green">Machine Learning</span>
+                <span class="tag green">Data Science</span>
+                <span class="tag">Web Development</span>
+            </div>
+        </div>
+        <div class="edu-card fade-up" style="transition-delay:0.1s">
+            <div>
+                <div class="edu-degree">Higher Secondary Certificate (HSC) — Science</div>
+                <div class="edu-school">Shjalal Jamia Islamia School and College</div>
+            </div>
+            <div class="tags"><span class="tag">Science</span></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certifications">
+        <div class="section-label">Credentials</div>
+        <h2 class="section-title">Certifications</h2>
+
+        <div class="cert-card fade-up" onclick="openCertModal('aiautomationc.png','AI Automation For Work & Business','Ostad','C38975')" style="cursor:pointer;">
+            <div style="display:flex;align-items:center;gap:1.25rem;flex:1;min-width:0;">
+                <div style="width:44px;height:44px;border-radius:9px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🤖</div>
+                <div>
+                    <div class="cert-title">AI Automation For Work &amp; Business</div>
+                    <div class="cert-issuer">Ostad</div>
+                    <div class="cert-id">Certificate ID: C38975</div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;flex-wrap:wrap;">
+                <span class="cert-badge">Jan 2026</span>
+                <div class="tags">
+                    <span class="tag green">AI Automation</span>
+                    <span class="tag green">Business AI</span>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--dim);">click to view →</span>
+            </div>
+        </div>
+
+        <div class="cert-card fade-up" style="margin-top:1.25rem;cursor:pointer;" onclick="openCertModal('aimlc.png','Your Pathway to AI ML Engineering','Ostad','C39040')">
+            <div style="display:flex;align-items:center;gap:1.25rem;flex:1;min-width:0;">
+                <div style="width:44px;height:44px;border-radius:9px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🧠</div>
+                <div>
+                    <div class="cert-title">Your Pathway to AI ML Engineering</div>
+                    <div class="cert-issuer">Ostad</div>
+                    <div class="cert-id">Certificate ID: C39040</div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;flex-wrap:wrap;">
+                <span class="cert-badge">Jan 2026</span>
+                <div class="tags">
+                    <span class="tag">Machine Learning</span>
+                    <span class="tag green">AI Engineering</span>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--dim);">click to view →</span>
+            </div>
+        </div>
+
+        <div class="cert-card fade-up" style="margin-top:1.25rem;cursor:pointer;" onclick="openCertModal('dsc.png','Data Science Workshop for Research & Higher Studies','Ostad','C39041')">
+            <div style="display:flex;align-items:center;gap:1.25rem;flex:1;min-width:0;">
+                <div style="width:44px;height:44px;border-radius:9px;background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📊</div>
+                <div>
+                    <div class="cert-title">Data Science Workshop for Research &amp; Higher Studies</div>
+                    <div class="cert-issuer">Ostad</div>
+                    <div class="cert-id">Certificate ID: C39041</div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;flex-wrap:wrap;">
+                <span class="cert-badge">Jan 2026</span>
+                <div class="tags">
+                    <span class="tag">Data Science</span>
+                    <span class="tag green">Research</span>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--dim);">click to view →</span>
+            </div>
+        </div>
+
+        <div class="cert-card fade-up" style="margin-top:1.25rem;cursor:pointer;" onclick="openCertModal('simple_learn.png','n8n Course: No Code AI Agent Builder','Simplilearn','9690088 · Valid until Dec 2030')">
+            <div style="display:flex;align-items:center;gap:1.25rem;flex:1;min-width:0;">
+                <div style="width:44px;height:44px;border-radius:9px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">⚙️</div>
+                <div>
+                    <div class="cert-title">n8n Course: No Code AI Agent Builder</div>
+                    <div class="cert-issuer">Simplilearn</div>
+                    <div class="cert-id">Credential ID: 9690088 &nbsp;·&nbsp; Valid until Dec 2030</div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;flex-wrap:wrap;">
+                <span class="cert-badge">Jan 2026</span>
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag green">AI Agents</span>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--dim);">click to view →</span>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+    <div class="container">
+        <div class="section-label">Let's Connect</div>
+        <h2 class="section-title">Get In Touch</h2>
+        <p class="section-desc">Open to opportunities in automation engineering, ML research, and innovative tech projects.</p>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">📍</div>
+                <div class="contact-label">Location</div>
+                <div class="contact-value">Sylhet, Bangladesh</div>
+            </div>
+            <a class="contact-card" href="https://www.linkedin.com/in/md-miner-hossain-rimon-831490327/" target="_blank" rel="noopener">
+                <div class="contact-icon">💼</div>
+                <div class="contact-label">LinkedIn</div>
+                <div class="contact-value">Connect on LinkedIn ↗</div>
+            </a>
+            <a class="contact-card" href="https://github.com/Miner1033" target="_blank" rel="noopener">
+                <div class="contact-icon">💻</div>
+                <div class="contact-label">GitHub</div>
+                <div class="contact-value">github.com/Miner1033 ↗</div>
+            </a>
+            <a class="contact-card" href="https://arxiv.org/abs/2512.02023" target="_blank" rel="noopener">
+                <div class="contact-icon">📄</div>
+                <div class="contact-label">Research</div>
+                <div class="contact-value">View Publication ↗</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo">Rimon<span>.dev</span></div>
+                <p class="footer-tagline">Building intelligent systems<br>that make the future work.</p>
+                <div class="footer-social">
+                    <a href="https://github.com/Miner1033" target="_blank" rel="noopener" class="social-btn" title="GitHub">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/md-miner-hossain-rimon-831490327/" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="https://arxiv.org/abs/2512.02023" target="_blank" rel="noopener" class="social-btn" title="Research Paper">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                    </a>
+                    <a href="mhr_cv.pdf" download="Md_Miner_Hossain_Rimon_CV.pdf" class="social-btn" title="Download CV">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4v-2h14v2H5z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links-col">
+                <div class="footer-col-label">Navigation</div>
+                <a href="#experience" class="footer-link">Experience</a>
+                <a href="projects.html" class="footer-link">Projects</a>
+                <a href="#publications" class="footer-link">Research</a>
+                <a href="#education" class="footer-link">Education</a>
+                <a href="blog.html" class="footer-link">Blog</a>
+            </div>
+
+            <div class="footer-links-col">
+                <div class="footer-col-label">Stack</div>
+                <span class="footer-tech">n8n</span>
+                <span class="footer-tech">OpenAI</span>
+                <span class="footer-tech">Pinecone</span>
+                <span class="footer-tech">LangFlow</span>
+                <span class="footer-tech">Lovable</span>
+            </div>
+
+            <div class="footer-links-col">
+                <div class="footer-col-label">Status</div>
+                <div class="footer-status-item">
+                    <span class="status-dot-sm green"></span>
+                    <span>Available for hire</span>
+                </div>
+                <div class="footer-status-item">
+                    <span class="status-dot-sm green"></span>
+                    <span>Open to freelance</span>
+                </div>
+                <div class="footer-status-item">
+                    <span class="status-dot-sm blue"></span>
+                    <span>B.Sc. CSE — 2026</span>
+                </div>
+                <div class="footer-status-item">
+                    <span class="status-dot-sm pink"></span>
+                    <span>Published on arXiv</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Md. Miner Hossain Rimon · Sylhet, Bangladesh</p>
+            <div class="footer-bottom-right">
+                <span class="footer-made">Built with <span class="footer-heart">♥</span> &amp; <span>AI</span></span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    /* Mobile nav */
+    function toggleMobileNav() {
+        const nav = document.getElementById('nav-links');
+        const btn = document.getElementById('hamburger');
+        nav.classList.toggle('mobile-open');
+        btn.classList.toggle('open');
+        document.body.style.overflow = nav.classList.contains('mobile-open') ? 'hidden' : '';
+    }
+    // Close on link click
+    document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => {
+            document.getElementById('nav-links').classList.remove('mobile-open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        });
+    });
+
+    /* Scroll animations */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    /* Modal */
+    function openModal(card) {
+        const raw = card.querySelector('.modal-data');
+        if (!raw) return;
+        const data = JSON.parse(raw.textContent);
+        const body = document.getElementById('modal-body');
+
+        if (data.placeholder) {
+            body.innerHTML = `<div class="modal-number">${data.number}</div><div class="modal-title" style="color:var(--muted)">${data.title}</div><div class="modal-divider"></div><div class="modal-placeholder"><div class="modal-placeholder-icon">🚧</div><p class="modal-placeholder-text">This project hasn't been added yet.<br>Check back soon!</p></div>`;
+        } else {
+            const tagsHTML = (data.tags||[]).map(t=>`<span class="tag ${t.type==='green'?'green':''}">${t.label}</span>`).join('');
+            const metaHTML = (data.meta||[]).map(m=>`<div class="modal-meta-item"><div class="modal-meta-label">${m.label}</div><div class="modal-meta-value">${m.value}</div></div>`).join('');
+            const actionsHTML = data.link ? `<a href="${data.link}" target="_blank" class="btn btn-primary">View Project ↗</a>` : `<button class="btn btn-outline" onclick="closeModal()">Close</button>`;
+
+            let imageHTML = '';
+            if (data.images && data.images.length > 0) {
+                const thumbs = data.images.map((src,i)=>`<img src="${src}" alt="screenshot ${i+1}" class="gallery-thumb ${i===0?'gallery-active':''}" onclick="switchGallery(this,'${src}')">`).join('');
+                imageHTML = `<div><img id="gallery-main" src="${data.images[0]}" alt="${data.title}" class="gallery-main"><div class="gallery-strip">${thumbs}</div></div>`;
+            } else if (data.image) {
+                imageHTML = `<img src="${data.image}" alt="${data.title}" style="width:100%;border-radius:10px;border:1px solid var(--border);margin-bottom:1.75rem;display:block;">`;
+            }
+
+            const videoHTML = (() => {
+                if (!data.video) return '';
+                const getType = src => src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+                const srcs = Array.isArray(data.video) ? data.video : [data.video];
+                const clipBtns = srcs.length > 1
+                    ? `<div id="vclip-bar" style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap;">
+                        ${srcs.map((s,i)=>`<span id="vclip-${i}" onclick="switchVideoClip(${i})" style="cursor:pointer;padding:0.25rem 0.75rem;border-radius:5px;border:1px solid ${i===0?'var(--green)':'var(--border)'};color:${i===0?'var(--green)':'var(--dim)'};font-family:var(--font-mono);font-size:0.7rem;transition:all 0.2s;">Clip ${i+1}</span>`).join('')}
+                      </div>` : '';
+                window._vSrcs = srcs; window._vCur = 0;
+                return `<div style="margin-bottom:1.75rem;">
+                    <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;">▶ Demo Video</div>
+                    <video id="demo-video" controls style="width:100%;border-radius:10px;border:1px solid var(--border);display:block;background:#000;">
+                        <source id="demo-video-src" src="${srcs[0]}" type="${getType(srcs[0])}">
+                    </video>
+                    ${clipBtns}
+                </div>`;
+            })();
+
+            body.innerHTML = `
+                <div class="modal-number">${data.number}</div>
+                <div class="modal-title">${data.title}</div>
+                <div class="modal-tags">${tagsHTML}</div>
+                <div class="modal-divider"></div>
+                ${imageHTML}
+                ${videoHTML}
+                <p class="modal-desc">${data.desc.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</p>
+                ${metaHTML?`<div class="modal-meta-grid">${metaHTML}</div>`:''}
+                <div class="modal-actions">${actionsHTML}</div>`;
+
+            // Init video player after innerHTML
+            if (window._vSrcs && window._vSrcs.length > 0) {
+                const vid = document.getElementById('demo-video');
+                if (vid) {
+                    vid.load();
+                    vid.addEventListener('ended', function() {
+                        if (window._vCur + 1 < window._vSrcs.length) switchVideoClip(window._vCur + 1);
+                    });
+                }
+            }
+        }
+
+        document.getElementById('modal-backdrop').classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-backdrop').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+
+    function handleBackdropClick(e) {
+        if (e.target === document.getElementById('modal-backdrop')) closeModal();
+    }
+
+    function switchVideoClip(i) {
+        const srcs = window._vSrcs;
+        if (!srcs) return;
+        const getType = src => src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+        window._vCur = i;
+        const vid = document.getElementById('demo-video');
+        const src = document.getElementById('demo-video-src');
+        if (vid && src) { src.src = srcs[i]; src.type = getType(srcs[i]); vid.load(); vid.play(); }
+        srcs.forEach((_,j) => {
+            const el = document.getElementById('vclip-' + j);
+            if (el) { el.style.borderColor = j===i ? 'var(--green)' : 'var(--border)'; el.style.color = j===i ? 'var(--green)' : 'var(--dim)'; }
+        });
+    }
+
+    function switchGallery(thumb, src) {
+        const main = document.getElementById('gallery-main');
+        main.style.opacity = '0';
+        setTimeout(() => { main.src = src; main.style.opacity = '1'; }, 150);
+        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-active'));
+        thumb.classList.add('gallery-active');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCertModal(); } });
+
+    function openCertModal(src, title, issuer, id) {
+        // When called with isPDF=true flag (4th arg is boolean true), show PDF
+        // When called normally (4th arg is credential ID string), show image
+        const isPDF = (id === true);
+        const subLine = isPDF ? issuer : `${issuer} &nbsp;·&nbsp; ${id}`;
+        const contentHTML = isPDF
+            ? `<div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--dim);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                <span>↕ Drag bottom edge to resize viewer</span>
+                <a href="${src}" download style="color:var(--green);text-decoration:none;border:1px solid rgba(0,255,136,0.25);padding:0.2rem 0.7rem;border-radius:5px;">↓ Download PDF</a>
+               </div>
+               <iframe src="${src}" style="width:100%;height:68vh;min-height:400px;border-radius:10px;border:1px solid var(--border);display:block;background:#fff;resize:vertical;overflow:auto;" title="${title}"></iframe>`
+            : `<img src="${src}" alt="${title}" style="width:100%;border-radius:10px;border:1px solid var(--border);display:block;">`;
+        document.getElementById('cert-modal-body').innerHTML = `
+            <div class="modal-number">${subLine}</div>
+            <div class="modal-title" style="font-size:1.4rem;margin-bottom:1.25rem;">${title}</div>
+            ${contentHTML}`;
+        document.getElementById('cert-modal-backdrop').classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+    function closeCertModal() {
+        document.getElementById('cert-modal-backdrop').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+</script>
+</body>
+</html>
