@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Md. Miner Hossain Rimon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:           #04060f;
+            --surface:      rgba(255,255,255,0.03);
+            --surface2:     rgba(255,255,255,0.06);
+            --border:       rgba(255,255,255,0.08);
+            --border-green: rgba(0,255,136,0.35);
+            --border-blue:  rgba(59,130,246,0.3);
+            --green:  #00ff88;
+            --blue:   #3b82f6;
+            --pink:   #f472b6;
+            --text:   #f0f4ff;
+            --muted:  #6b7a99;
+            --dim:    #3d4a66;
+            --font-display: 'Clash Display', 'Segoe UI', sans-serif;
+            --font-body:    'Cabinet Grotesk', 'Segoe UI', sans-serif;
+            --font-serif:   'Instrument Serif', Georgia, serif;
+            --font-mono:    'Fira Code', 'Courier New', monospace;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body.modal-open { overflow: hidden; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .glow-1, .glow-2 {
+            position: fixed; border-radius: 50%; pointer-events: none;
+            filter: blur(130px); z-index: 0;
+        }
+        .glow-1 { width: 500px; height: 500px; background: rgba(0,255,136,0.06); top: -150px; right: -150px; }
+        .glow-2 { width: 600px; height: 600px; background: rgba(59,130,246,0.04); bottom: 0; left: -200px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 50; padding: 1.25rem 0;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); background: rgba(4,6,15,0.75);
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--green); letter-spacing: -0.02em; text-decoration: none; }
+        .logo span { color: var(--muted); font-weight: 400; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { font-family: var(--font-body); color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--green); }
+
+        /* ── PAGE HEADER ── */
+        .page-header { padding: 6rem 0 3rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); text-decoration: none; margin-bottom: 2rem; transition: color 0.2s; }
+        .back-link:hover { color: var(--green); }
+        .back-link::before { content: '←'; }
+        .page-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+        .page-label::after { content: ''; width: 48px; height: 1px; background: var(--green); opacity: 0.4; }
+        h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+        h1 .accent { color: var(--green); }
+        .page-desc {
+            font-family: var(--font-body);
+            font-style: normal;
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 640px;
+            line-height: 2;
+            font-weight: 500;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s; }
+        .filter-btn { padding: 0.4rem 1.1rem; font-family: var(--font-mono); font-size: 0.78rem; border-radius: 100px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover { border-color: var(--green); color: var(--green); }
+        .filter-btn.active { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.35); color: var(--green); }
+
+        /* ── FEATURED POST ── */
+        .featured-wrap { margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s; }
+        .featured-card {
+            border: 1px solid var(--border-green);
+            border-radius: 14px;
+            background: var(--surface);
+            overflow: hidden;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .featured-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--blue), var(--pink));
+        }
+        .featured-card:hover { transform: translateY(-4px); box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,136,0.06); }
+
+        .featured-visual {
+            background: linear-gradient(135deg, rgba(0,255,136,0.07) 0%, rgba(59,130,246,0.06) 60%, rgba(244,114,182,0.04) 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; min-height: 260px;
+            border-right: 1px solid var(--border);
+        }
+        .featured-visual .dot-grid {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(0,255,136,0.15) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        .featured-visual .big-icon { font-size: 5.5rem; position: relative; z-index: 1; filter: drop-shadow(0 0 24px rgba(0,255,136,0.4)); }
+
+        .featured-body { padding: 2.25rem 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+        .featured-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-family: var(--font-mono); font-size: 0.7rem; color: var(--green);
+            padding: 0.28rem 0.9rem; border-radius: 100px;
+            background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.25);
+            margin-bottom: 1.1rem; width: fit-content;
+            letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .featured-badge::before { content: '★'; }
+        .featured-title { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 0.85rem; letter-spacing: -0.02em; }
+        .featured-excerpt { font-family: var(--font-body); color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.25rem; }
+        .read-hint { font-family: var(--font-mono); font-size: 0.72rem; color: var(--dim); display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; margin-top: auto; }
+        .featured-card:hover .read-hint { color: var(--green); }
+        .read-hint::after { content: '→'; transition: transform 0.2s; }
+        .featured-card:hover .read-hint::after { transform: translateX(4px); }
+
+        /* ── TAGS ── */
+        .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1rem; }
+        .tag { padding: 0.25rem 0.72rem; font-family: var(--font-mono); font-size: 0.73rem; border-radius: 6px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.18); color: #93c5fd; }
+        .tag.green { background: rgba(0,255,136,0.07); border-color: rgba(0,255,136,0.18); color: #6ee7b7; }
+        .tag.pink  { background: rgba(244,114,182,0.07); border-color: rgba(244,114,182,0.18); color: var(--pink); }
+
+        /* ── CATEGORY PILL ── */
+        .cat-pill { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.22rem 0.7rem; border-radius: 100px; }
+        .cat-automation { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+        .cat-ml         { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); color: #93c5fd; }
+        .cat-research   { background: rgba(244,114,182,0.08); border: 1px solid rgba(244,114,182,0.2); color: var(--pink); }
+
+        /* ── BLOG GRID ── */
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; padding-bottom: 6rem; }
+
+        /* ── BLOG CARD ── */
+        .blog-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            display: flex; flex-direction: column;
+            cursor: pointer;
+            position: relative; overflow: hidden;
+            transition: all 0.3s;
+        }
+        .blog-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: 12px;
+            background: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.05), transparent 65%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .blog-card:hover { border-color: var(--border-green); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        .blog-card:hover::after { opacity: 1; }
+
+        /* Card header visual */
+        .card-visual {
+            height: 120px;
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--border);
+            position: relative; overflow: hidden; flex-shrink: 0;
+        }
+        .card-visual .dot-bg {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+        .card-visual .cv-icon { font-size: 2.8rem; position: relative; z-index: 1; filter: drop-shadow(0 0 14px currentColor); opacity: 0.7; transition: opacity 0.3s, transform 0.3s; }
+        .blog-card:hover .cv-icon { opacity: 1; transform: scale(1.08); }
+
+        .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+        .card-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem; flex-wrap: wrap; }
+        .card-date { font-family: var(--font-mono); font-size: 0.67rem; color: var(--dim); }
+        .card-readtime { font-family: var(--font-mono); font-size: 0.67rem; color: var(--dim); margin-left: auto; }
+        .card-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.65rem; line-height: 1.3; letter-spacing: -0.01em; }
+        .card-excerpt { font-family: var(--font-body); color: var(--muted); font-size: 0.88rem; line-height: 1.75; flex: 1; margin-bottom: 1.1rem; }
+        .card-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .read-more { font-family: var(--font-mono); font-size: 0.72rem; color: var(--dim); display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+        .blog-card:hover .read-more { color: var(--green); }
+        .read-more::after { content: '→'; transition: transform 0.2s; }
+        .blog-card:hover .read-more::after { transform: translateX(4px); }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            position: fixed; inset: 0; background: rgba(4,6,15,0.88);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            z-index: 200; display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: #080d1e; border: 1px solid rgba(0,255,136,0.2); border-radius: 16px;
+            width: 100%; max-width: 820px; max-height: 90vh; overflow-y: auto; position: relative;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(0,255,136,0.05);
+        }
+        .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+        .modal::-webkit-scrollbar { width: 5px; }
+        .modal::-webkit-scrollbar-track { background: transparent; }
+        .modal::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 10px; }
+
+        .modal-top-bar { height: 3px; background: linear-gradient(90deg, var(--green), var(--blue), var(--pink)); border-radius: 16px 16px 0 0; }
+        .modal-close {
+            position: absolute; top: 1.5rem; right: 1.75rem;
+            width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--surface); color: var(--muted); font-size: 1.1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .modal-close:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); }
+        .modal-inner { padding: 2.5rem 3rem 3rem; }
+        .modal-cat { display: inline-block; margin-bottom: 1rem; }
+        .modal-title { font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; line-height: 1.1; }
+        .modal-meta-row { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.75rem; flex-wrap: wrap; }
+        .modal-meta-item { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; }
+        .modal-divider { height: 1px; background: var(--border); margin-bottom: 2rem; }
+
+        /* Article content */
+        .article-body { font-family: var(--font-body); font-size: 1rem; color: var(--muted); line-height: 1.9; }
+        .article-body p { margin-bottom: 1.4rem; }
+        .article-body h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 2rem 0 0.75rem; letter-spacing: -0.01em; }
+        .article-body ul { padding-left: 1.4rem; margin-bottom: 1.4rem; }
+        .article-body ul li { margin-bottom: 0.55rem; }
+        .article-body strong { color: var(--text); font-weight: 700; }
+        .callout {
+            background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2);
+            border-left: 3px solid var(--green); border-radius: 0 8px 8px 0;
+            padding: 1.1rem 1.4rem; margin: 1.5rem 0;
+            font-family: var(--font-mono); font-size: 0.86rem; color: var(--green); line-height: 1.65;
+        }
+        .article-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+
+        /* ── FOOTER ── */
+        footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-copy { font-family: var(--font-body); color: var(--dim); font-size: 0.85rem; }
+        .footer-made { font-family: var(--font-mono); color: var(--dim); font-size: 0.82rem; }
+        .footer-made span { color: var(--green); }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 860px) { .featured-card { grid-template-columns: 1fr; } .featured-visual { min-height: 150px; border-right: none; border-bottom: 1px solid var(--border); } }
+        @media (max-width: 768px) { .nav-links { gap: 1.5rem; } .modal-inner { padding: 2rem 1.75rem 2.5rem; } .footer-inner { justify-content: center; text-align: center; } }
+        @media (max-width: 500px) { .nav-links { display: none; } h1 { font-size: 2.2rem; } }
+    </style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- ── MODAL ── -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+    <div class="modal">
+        <div class="modal-top-bar"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-inner" id="modal-inner"></div>
+    </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+    <div class="container">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">Rimon<span>.dev</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="education.html">Education</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- ── PAGE HEADER ── -->
+    <div class="page-header">
+        <a href="portfolio.html" class="back-link">Back to Home</a>
+        <div class="page-label">Writing</div>
+        <h1>Thoughts &amp; <span class="accent">Research</span></h1>
+        <p class="page-desc">
+            Deep dives into AI automation, machine learning research,<br>
+            and the tools shaping how intelligent systems are built.<br>
+            Written from real hands-on experience — not theory.
+        </p>
+    </div>
+
+    <!-- ── FILTER BAR ── -->
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterPosts('all',this)">All Posts</button>
+        <button class="filter-btn" onclick="filterPosts('automation',this)">AI Automation</button>
+        <button class="filter-btn" onclick="filterPosts('ml',this)">Machine Learning</button>
+        <button class="filter-btn" onclick="filterPosts('research',this)">Research</button>
+    </div>
+
+    <!-- ── FEATURED POST ── -->
+    <div class="featured-wrap fade-up" data-category="automation">
+        <div class="featured-card" onclick="openPost('p1')">
+            <div class="featured-visual">
+                <div class="dot-grid"></div>
+                <span class="big-icon">🤖</span>
+            </div>
+            <div class="featured-body">
+                <div class="featured-badge">Featured Post</div>
+                <div class="card-meta">
+                    <span class="cat-pill cat-automation">AI Automation</span>
+                    <span class="card-date">Jan 2026</span>
+                    <span class="card-readtime">8 min read</span>
+                </div>
+                <div class="featured-title">Why n8n is the Best Tool for AI Automation in 2026</div>
+                <p class="featured-excerpt">From visual pipelines to full AI agents with memory and tools — n8n has become the backbone of every automation I build. Here's exactly why every developer should master it.</p>
+                <div class="tags">
+                    <span class="tag green">n8n</span>
+                    <span class="tag green">AI Agents</span>
+                    <span class="tag">Workflow</span>
+                    <span class="tag">OpenAI</span>
+                </div>
+                <div class="read-hint">Read full post</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── BLOG GRID ── -->
+    <div class="blog-grid" id="blog-grid">
+
+        <!-- Post 2 -->
+        <div class="blog-card fade-up" data-category="ml" style="transition-delay:0.08s" onclick="openPost('p2')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(99,102,241,0.07));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#93c5fd;">🧠</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-ml">Machine Learning</span>
+                    <span class="card-date">Dec 2025</span>
+                    <span class="card-readtime">6 min read</span>
+                </div>
+                <div class="card-title">RAG vs Fine-Tuning: Which Should You Use?</div>
+                <p class="card-excerpt">Two powerful techniques for making LLMs domain-specific. One is fast and flexible, the other is deep and permanent. Here's the decision framework I use on every project.</p>
+                <div class="tags">
+                    <span class="tag">RAG</span>
+                    <span class="tag">Fine-Tuning</span>
+                    <span class="tag green">LLMs</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="blog-card fade-up" data-category="automation" style="transition-delay:0.13s" onclick="openPost('p3')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(0,255,136,0.08),rgba(16,185,129,0.05));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#00ff88;">⚡</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-automation">AI Automation</span>
+                    <span class="card-date">Jan 2026</span>
+                    <span class="card-readtime">5 min read</span>
+                </div>
+                <div class="card-title">Building a Multi-Agent AI System from Scratch</div>
+                <p class="card-excerpt">Chaining three specialized agents — researcher, writer, editor — produces output quality that a single agent simply can't match. Here's the exact architecture I built.</p>
+                <div class="tags">
+                    <span class="tag green">Multi-Agent</span>
+                    <span class="tag green">n8n</span>
+                    <span class="tag">OpenAI</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 4 -->
+        <div class="blog-card fade-up" data-category="research" style="transition-delay:0.18s" onclick="openPost('p4')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(244,114,182,0.1),rgba(167,139,250,0.07));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#f472b6;">📊</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-research">Research</span>
+                    <span class="card-date">Dec 2025</span>
+                    <span class="card-readtime">10 min read</span>
+                </div>
+                <div class="card-title">How I Fixed Class Imbalance in My Diabetes Prediction Research</div>
+                <p class="card-excerpt">Class imbalance kills model accuracy silently. In my arXiv paper, I tackled this with SMOTE on the BRFSS dataset — and the F1 scores told a very different story than accuracy alone.</p>
+                <div class="tags">
+                    <span class="tag">SMOTE</span>
+                    <span class="tag">Ensemble ML</span>
+                    <span class="tag pink">arXiv</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 5 -->
+        <div class="blog-card fade-up" data-category="automation" style="transition-delay:0.23s" onclick="openPost('p5')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(245,158,11,0.05));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#fbbf24;">🔗</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-automation">AI Automation</span>
+                    <span class="card-date">Feb 2026</span>
+                    <span class="card-readtime">7 min read</span>
+                </div>
+                <div class="card-title">Pinecone + OpenAI: Building a Knowledge Base That Actually Works</div>
+                <p class="card-excerpt">Vector databases changed how we build AI systems. Here's a practical guide to chunking, embedding, and retrieving — the three things that determine whether your RAG pipeline works or fails.</p>
+                <div class="tags">
+                    <span class="tag green">Pinecone</span>
+                    <span class="tag">Vector DB</span>
+                    <span class="tag green">RAG</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 6 -->
+        <div class="blog-card fade-up" data-category="ml" style="transition-delay:0.28s" onclick="openPost('p6')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.06));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#34d399;">🌲</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-ml">Machine Learning</span>
+                    <span class="card-date">Nov 2025</span>
+                    <span class="card-readtime">7 min read</span>
+                </div>
+                <div class="card-title">Why Ensemble Models Beat Single Classifiers Every Time</div>
+                <p class="card-excerpt">Random Forest, XGBoost, Gradient Boosting — why combining weak learners consistently produces stronger predictions. A practical breakdown with real benchmark results from my research.</p>
+                <div class="tags">
+                    <span class="tag">Ensemble</span>
+                    <span class="tag">XGBoost</span>
+                    <span class="tag green">Classification</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 7 -->
+        <div class="blog-card fade-up" data-category="automation" style="transition-delay:0.33s" onclick="openPost('p7')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(244,114,182,0.07));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#a78bfa;">🧩</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-automation">AI Automation</span>
+                    <span class="card-date">Feb 2026</span>
+                    <span class="card-readtime">6 min read</span>
+                </div>
+                <div class="card-title">Human-in-the-Loop: Why AI Always Needs a Human Checkpoint</div>
+                <p class="card-excerpt">Full automation isn't always the goal. Sometimes the most powerful pipeline is one where AI drafts and a human approves. Here's the pattern, the implementation, and when to use it.</p>
+                <div class="tags">
+                    <span class="tag green">HITL</span>
+                    <span class="tag">AI Safety</span>
+                    <span class="tag">n8n</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 8 -->
+        <div class="blog-card fade-up" data-category="research" style="transition-delay:0.38s" onclick="openPost('p8')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(244,114,182,0.09),rgba(251,191,36,0.06));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#f472b6;">🔬</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-research">Research</span>
+                    <span class="card-date">Jan 2026</span>
+                    <span class="card-readtime">9 min read</span>
+                </div>
+                <div class="card-title">Feature Engineering: The Hidden Key to Better ML Models</div>
+                <p class="card-excerpt">Most tutorials skip feature engineering. But it's often more impactful than model selection. Here are the exact techniques I used in my published diabetes prediction research.</p>
+                <div class="tags">
+                    <span class="tag pink">Feature Engineering</span>
+                    <span class="tag">ML Research</span>
+                    <span class="tag">BRFSS</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+        <!-- Post 9 -->
+        <div class="blog-card fade-up" data-category="automation" style="transition-delay:0.43s" onclick="openPost('p9')">
+            <div class="card-visual" style="background:linear-gradient(135deg,rgba(0,255,136,0.07),rgba(59,130,246,0.07));">
+                <div class="dot-bg"></div>
+                <span class="cv-icon" style="color:#00ff88;">🚀</span>
+            </div>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="cat-pill cat-automation">AI Automation</span>
+                    <span class="card-date">Mar 2026</span>
+                    <span class="card-readtime">8 min read</span>
+                </div>
+                <div class="card-title">From Idea to SaaS: How I Built an AI Tool in 48 Hours</div>
+                <p class="card-excerpt">Lovable for frontend, n8n for backend, a webhook to connect them — and a working SaaS product by the end of the weekend. Here's the exact hour-by-hour process I follow.</p>
+                <div class="tags">
+                    <span class="tag green">SaaS</span>
+                    <span class="tag green">Lovable</span>
+                    <span class="tag">n8n</span>
+                    <span class="tag">Product</span>
+                </div>
+                <div class="card-footer"><span class="read-more">Read post</span></div>
+            </div>
+        </div>
+
+    </div><!-- /blog-grid -->
+</div><!-- /container -->
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <p class="footer-copy">© 2026 Md. Miner Hossain Rimon</p>
+            <p class="footer-made">Powered by <span>AI &amp; Innovation</span></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    /* ── Scroll animations ── */
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+    /* ── Filter ── */
+    function filterPosts(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Featured
+        const featured = document.querySelector('.featured-wrap');
+        const fc = featured.dataset.category;
+        if (cat === 'all' || fc === cat) { featured.style.display = ''; setTimeout(() => featured.style.opacity = '1', 10); }
+        else { featured.style.opacity = '0'; setTimeout(() => featured.style.display = 'none', 300); }
+        // Cards
+        document.querySelectorAll('.blog-card').forEach(card => {
+            if (cat === 'all' || card.dataset.category === cat) { card.style.display = 'flex'; setTimeout(() => card.style.opacity = '1', 10); }
+            else { card.style.opacity = '0'; setTimeout(() => card.style.display = 'none', 300); }
+        });
+    }
+
+    /* ── Post content data ── */
+    const posts = {
+        p1: {
+            cat: 'AI Automation', catClass: 'cat-automation',
+            title: 'Why n8n is the Best Tool for AI Automation in 2026',
+            date: 'January 2026', readTime: '8 min read',
+            tags: ['n8n','AI Agents','Workflow Automation','OpenAI','No-Code'],
+            body: `
+                <p>When I started building AI automation workflows I tried everything — Zapier, Make, custom Python, LangChain pipelines. Nothing came close to the power and flexibility of <strong>n8n</strong>. Here's why it has become the backbone of every AI project I build.</p>
+                <h3>What Makes n8n Different</h3>
+                <p>Most automation tools treat AI as an afterthought — a single ChatGPT node bolted onto an existing workflow builder. n8n was rebuilt with AI at its core. The AI Agent node doesn't just call an API; it reasons, selects tools, maintains memory across turns, and makes decisions autonomously.</p>
+                <div class="callout">Key insight: n8n's AI Agent can access Google Sheets, HTTP APIs, databases, Gmail — any node becomes a tool the agent can call. That's what makes it a true autonomous agent, not just a chatbot wrapper.</div>
+                <h3>Visual Workflows = Faster Debugging</h3>
+                <p>Code is powerful but slow to iterate on. n8n's canvas lets you see your entire pipeline at a glance — which node is failing, what data is flowing, what the AI decided to do. This visual feedback loop cuts debugging time dramatically compared to reading Python stack traces.</p>
+                <h3>Self-Hosting = Full Data Control</h3>
+                <p>Unlike cloud-only tools, n8n can run on your own server. Your data never leaves your infrastructure — critical for enterprise clients, healthcare projects, and financial workflows. I've deployed it on VPS for client projects where data privacy was non-negotiable.</p>
+                <h3>My Top 3 n8n Patterns</h3>
+                <ul>
+                    <li><strong>Webhook → AI Agent → Multiple Tools</strong> — the foundation of every smart chatbot</li>
+                    <li><strong>Schedule → Fetch → AI Analyze → Report</strong> — automated research and monitoring pipelines</li>
+                    <li><strong>Send & Wait for Response</strong> — Human-in-the-Loop approval before publishing anything publicly</li>
+                </ul>
+                <p>If you're serious about AI automation in 2026, n8n is not optional. It's the one tool that grows with you from prototype to production.</p>`
+        },
+        p2: {
+            cat: 'Machine Learning', catClass: 'cat-ml',
+            title: 'RAG vs Fine-Tuning: Which Should You Use?',
+            date: 'December 2025', readTime: '6 min read',
+            tags: ['RAG','Fine-Tuning','LLMs','Vector Database','OpenAI','LangFlow'],
+            body: `
+                <p>Both <strong>RAG</strong> and <strong>Fine-Tuning</strong> make LLMs smarter about your specific domain. But they work completely differently — and choosing the wrong one wastes weeks of work and thousands in compute costs.</p>
+                <h3>What is RAG?</h3>
+                <p>RAG keeps the base model frozen and gives it access to an external knowledge base at query time. When a user asks something, the system retrieves the most relevant document chunks, injects them into the prompt, and the LLM answers with that grounded context.</p>
+                <div class="callout">RAG is like giving the AI a textbook to read before answering each question — it doesn't change the model itself, just what information it has access to at that moment.</div>
+                <h3>What is Fine-Tuning?</h3>
+                <p>Fine-tuning updates the model's actual weights using your custom dataset. The knowledge becomes permanently baked into the model. It's more expensive, takes longer, requires quality training data — but can be dramatically better for narrow, specific tasks like writing in a particular style or understanding a proprietary domain.</p>
+                <h3>The Decision Framework</h3>
+                <ul>
+                    <li><strong>Use RAG when:</strong> Your knowledge base changes frequently, you need source citations, or you want rapid deployment without GPU costs</li>
+                    <li><strong>Use Fine-Tuning when:</strong> You need a specific tone, writing style, or highly specialized reasoning the base model doesn't have</li>
+                    <li><strong>Use both when:</strong> You need domain expertise (fine-tuning) plus up-to-date dynamic information (RAG)</li>
+                </ul>
+                <p>For 90% of business use cases, start with RAG. It's faster to build, cheaper to run, and easier to update when your data changes. Reach for fine-tuning only when RAG consistently hits a ceiling.</p>`
+        },
+        p3: {
+            cat: 'AI Automation', catClass: 'cat-automation',
+            title: 'Building a Multi-Agent AI System from Scratch',
+            date: 'January 2026', readTime: '5 min read',
+            tags: ['Multi-Agent','AI Agents','n8n','OpenAI','Google Gemini','Content Automation'],
+            body: `
+                <p>A single AI agent is like a generalist employee — decent at everything, exceptional at nothing. When you chain <strong>specialized agents</strong> together, each doing one job brilliantly, the output quality jumps to a completely different level.</p>
+                <h3>The Three-Agent Architecture</h3>
+                <p>In my LinkedIn Post Generator project, I built a pipeline with three dedicated agents working in sequence. <strong>Agent 1 (Research)</strong> digs deep into the topic — extracting key insights, recent examples, and compelling angles. <strong>Agent 2 (Writing)</strong> structures the content specifically for LinkedIn's algorithm — hook, short paragraphs, spacing, CTA. <strong>Agent 3 (Editorial)</strong> strips AI-sounding phrases, adds personality, and makes it sound human.</p>
+                <div class="callout">Rule of thumb: If one agent is doing more than one job, split it into two. Specialization always produces better output than a single powerful prompt trying to do everything.</div>
+                <h3>How to Pass Context Between Agents</h3>
+                <p>Each agent's output becomes the next agent's input. In n8n this flows naturally through connected nodes. The key is writing clear handoff prompts — telling each agent exactly what format it's receiving and exactly what format to output. Consistency in data structure prevents agents from misinterpreting each other's work.</p>
+                <h3>When Multi-Agent Adds Real Value</h3>
+                <ul>
+                    <li>Complex content creation pipelines (research → draft → edit → publish)</li>
+                    <li>Quality assurance loops where one agent validates another's output</li>
+                    <li>Data pipelines with fundamentally different processing stages</li>
+                </ul>
+                <p>Start with one agent, identify its specific weaknesses, then add a second agent targeted at fixing exactly those weaknesses. Don't over-engineer from day one.</p>`
+        },
+        p4: {
+            cat: 'Research', catClass: 'cat-research',
+            title: 'How I Fixed Class Imbalance in My Diabetes Prediction Research',
+            date: 'December 2025', readTime: '10 min read',
+            tags: ['SMOTE','Class Imbalance','Ensemble ML','BRFSS 2025','Random Forest','arXiv'],
+            body: `
+                <p>When I started working on diabetes prediction using the BRFSS 2015 dataset, I ran into the most dangerous trap in healthcare ML: <strong>class imbalance</strong>. Only ~15% of samples were positive cases. My first model hit 85% accuracy and was completely useless clinically.</p>
+                <h3>Why Class Imbalance is Dangerous</h3>
+                <p>A model can achieve 85% accuracy by simply predicting "no diabetes" for every single sample — it learns nothing about the disease. High accuracy on paper, zero clinical value in practice. This is the trap that catches most beginners because accuracy looks great in the report but the confusion matrix tells a devastating story.</p>
+                <div class="callout">Always check your class distribution before trusting any accuracy metric. Use F1-score, precision, and recall. A model that never predicts the positive class has perfect specificity and zero utility.</div>
+                <h3>SMOTE: Synthetic Minority Over-Sampling Technique</h3>
+                <p>SMOTE creates synthetic new samples of the minority class by interpolating between existing minority examples in feature space. Instead of simply duplicating data (which causes overfitting), it generates new realistic samples — giving the model genuinely more to learn from.</p>
+                <h3>Results from My Published Research</h3>
+                <p>After applying SMOTE combined with feature selection to identify the most predictive health indicators, our ensemble model achieved significantly improved F1 scores on the positive (diabetes) class compared to all baseline models. The research — published on arXiv — demonstrated that proper data preprocessing consistently outweighs model complexity in healthcare prediction tasks.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li>Always address class imbalance before selecting a model</li>
+                    <li>SMOTE works best when combined with careful feature selection</li>
+                    <li>Ensemble methods handle imbalanced data better than single classifiers</li>
+                    <li>F1 score, not accuracy, is the correct metric for imbalanced healthcare data</li>
+                </ul>`
+        },
+        p5: {
+            cat: 'AI Automation', catClass: 'cat-automation',
+            title: 'Pinecone + OpenAI: Building a Knowledge Base That Actually Works',
+            date: 'February 2026', readTime: '7 min read',
+            tags: ['Pinecone','Vector DB','RAG','OpenAI Embeddings','LangFlow','Astra DB'],
+            body: `
+                <p>Everyone talks about RAG. Few talk about what actually makes a RAG system work in production. The answer is in how you <strong>chunk, embed, and retrieve</strong> — and these decisions have more impact on quality than the LLM you pick.</p>
+                <h3>Stage 1: Ingestion</h3>
+                <p>Split documents into chunks — I use size 1000 with overlap 200. The overlap is non-negotiable: without it, a sentence split across two chunk boundaries loses its meaning. Generate embeddings using OpenAI's text-embedding-3-small. Store vectors in Pinecone with metadata (source file, page number, date) for filtered retrieval later.</p>
+                <h3>Stage 2: Retrieval</h3>
+                <p>Convert the user's query into an embedding using the same model. Query Pinecone for the top-k most similar vectors using cosine similarity. Return those chunks as context for the LLM. The quality of retrieval directly determines the quality of generation — garbage in, garbage out.</p>
+                <div class="callout">Critical: Your chunk overlap (200 tokens) ensures that meaning preserved at the boundaries. If a key sentence straddles two chunks, both chunks contain it. This is what separates working RAG from broken RAG.</div>
+                <h3>Stage 3: Generation</h3>
+                <p>Inject retrieved context + user question into a structured prompt template. Use GPT-4o-mini with temperature 0.1 for factual accuracy. Low temperature means consistent, grounded answers rather than creative hallucinations.</p>
+                <h3>Common Mistakes I've Fixed for Others</h3>
+                <ul>
+                    <li>Chunks too large (>2000 tokens) = imprecise retrieval, too much noise</li>
+                    <li>Chunks too small (<200 tokens) = context fragments that make no sense alone</li>
+                    <li>No overlap = broken meaning at every boundary</li>
+                    <li>Not filtering by metadata = retrieving from wrong documents entirely</li>
+                </ul>`
+        },
+        p6: {
+            cat: 'Machine Learning', catClass: 'cat-ml',
+            title: 'Why Ensemble Models Beat Single Classifiers Every Time',
+            date: 'November 2025', readTime: '7 min read',
+            tags: ['Ensemble Learning','XGBoost','Random Forest','Gradient Boosting','Classification','Bias-Variance'],
+            body: `
+                <p>In every ML competition and real-world project I've worked on, the winner is almost always an ensemble model. Not because ensembles are magic — but because they systematically address the two fundamental sources of prediction error: <strong>bias and variance</strong>.</p>
+                <h3>The Core Idea</h3>
+                <p>A single decision tree has high variance — small changes in training data produce very different trees. A single linear model has high bias — it underfits complex patterns. Ensemble methods combine many imperfect models so their individual errors cancel out, leaving the signal while reducing the noise.</p>
+                <div class="callout">The wisdom of crowds applied to ML: 100 independent models making different errors will collectively outperform one sophisticated model making consistent errors — every single time.</div>
+                <h3>Three Types of Ensemble Methods</h3>
+                <p><strong>Bagging (Random Forest):</strong> Train many trees on random subsets of the training data, then average predictions. Dramatically reduces variance. Best when your data is noisy or you have high-dimensional features.</p>
+                <p><strong>Boosting (XGBoost, Gradient Boosting):</strong> Train models sequentially — each one specifically targeting the errors of the previous model. Reduces both bias and variance. This is usually the most accurate approach on tabular data.</p>
+                <p><strong>Stacking:</strong> Train multiple different model types, then train a meta-model to learn how to optimally combine their predictions. Most powerful approach, most complex to implement correctly without data leakage.</p>
+                <h3>What I Use in Practice</h3>
+                <ul>
+                    <li>Tabular classification: <strong>XGBoost or LightGBM</strong> as first choice, always</li>
+                    <li>Imbalanced healthcare data: <strong>Balanced Random Forest</strong> — handles class weights internally</li>
+                    <li>Maximum accuracy target: <strong>Stacking</strong> with XGBoost + RF + logistic regression as meta-learner</li>
+                </ul>`
+        },
+        p7: {
+            cat: 'AI Automation', catClass: 'cat-automation',
+            title: 'Human-in-the-Loop: Why AI Always Needs a Human Checkpoint',
+            date: 'February 2026', readTime: '6 min read',
+            tags: ['Human-in-the-Loop','HITL','AI Safety','n8n','Content Automation','Responsible AI'],
+            body: `
+                <p>The most common mistake in AI automation is chasing full automation too quickly. AI hallucinates. AI misunderstands context. AI produces content that's technically correct but strategically wrong for your audience. This is why the <strong>Human-in-the-Loop (HITL)</strong> design pattern exists — and why I include it in every content pipeline I build.</p>
+                <h3>What Human-in-the-Loop Means</h3>
+                <p>HITL is a design pattern where an automated pipeline pauses at a critical decision point and waits for human review before continuing. The AI does the heavy lifting — research, drafting, formatting, optimization — and the human does what humans genuinely do better: judgment calls about quality, appropriateness, and strategy.</p>
+                <div class="callout">Full automation is a destination, not a starting point. Begin with HITL, build trust in the AI's output over time, then gradually reduce checkpoint frequency as confidence grows. Never start with zero oversight.</div>
+                <h3>How I Implement HITL in n8n</h3>
+                <p>n8n's <strong>"Send message and wait for response"</strong> node is the key. The workflow pauses execution completely, emails the generated content to a reviewer, and waits. The Switch node then reads the reply — "Approve" routes to publish, "Reject" routes to discard. The entire approval loop takes 30 seconds for the human and adds enormous safety.</p>
+                <h3>When HITL is Non-Negotiable</h3>
+                <ul>
+                    <li>Publishing content publicly on LinkedIn, email campaigns, or social media</li>
+                    <li>Any irreversible action: sending emails to 1000 customers, deleting records</li>
+                    <li>High-stakes business decisions that represent your brand or professional reputation</li>
+                    <li>Medical, legal, or financial content where errors have real consequences</li>
+                </ul>
+                <p>HITL isn't a limitation on your automation — it's the feature that makes your automation trustworthy and deployable in the real world.</p>`
+        },
+        p8: {
+            cat: 'Research', catClass: 'cat-research',
+            title: 'Feature Engineering: The Hidden Key to Better ML Models',
+            date: 'January 2026', readTime: '9 min read',
+            tags: ['Feature Engineering','Feature Selection','ML Research','BRFSS','Diabetes Prediction','Correlation Analysis'],
+            body: `
+                <p>Every ML tutorial says "clean your data." Almost none explain what to do after that. <strong>Feature engineering</strong> — creating, selecting, and transforming variables — is where models are won or lost. In my diabetes prediction research, feature engineering had a greater impact on model performance than any model architecture choice.</p>
+                <h3>Why Features Matter More Than Models</h3>
+                <p>A great feature set with logistic regression will consistently outperform a terrible feature set with XGBoost. The model can only learn from what you give it. Garbage features, even with the most powerful algorithm, produce garbage predictions. Invest 50% of your project time here.</p>
+                <div class="callout">Core principle: A great feature with a simple model almost always beats a poor feature with a complex model. Model selection is step 3. Feature engineering is steps 1 and 2.</div>
+                <h3>Techniques I Used in My arXiv Research</h3>
+                <p><strong>Feature Selection:</strong> The BRFSS dataset has 300+ variables. Using correlation analysis and Random Forest feature importance, I identified the ~30 most predictive health indicators. Reducing dimensionality improved both model performance and training efficiency simultaneously.</p>
+                <p><strong>Interaction Features:</strong> Creating composite variables by combining existing ones — BMI category combined with physical activity level, age group combined with smoking history — captured non-linear relationships the model couldn't detect from raw features alone.</p>
+                <p><strong>Binning Continuous Variables:</strong> Converting continuous BMI into clinical categories (underweight, normal, overweight, obese) helped the model find threshold effects that polynomial features would miss.</p>
+                <h3>Feature Selection Methods Compared</h3>
+                <ul>
+                    <li><strong>Filter methods</strong> (correlation, chi-squared): Fast, model-agnostic, but miss feature interactions</li>
+                    <li><strong>Wrapper methods</strong> (Recursive Feature Elimination): Slow but captures interactions, best for smaller feature sets</li>
+                    <li><strong>Embedded methods</strong> (Lasso, RF importance): Best balance — fast and interaction-aware. This is what I use by default</li>
+                </ul>`
+        },
+        p9: {
+            cat: 'AI Automation', catClass: 'cat-automation',
+            title: 'From Idea to SaaS: How I Built an AI Tool in 48 Hours',
+            date: 'March 2026', readTime: '8 min read',
+            tags: ['SaaS','Lovable','n8n','Product Development','Webhook','AI Tools'],
+            body: `
+                <p>In 2024, building a SaaS product required months of engineering. In 2026, with the right stack, it takes a weekend. I've built multiple working tools this way — Find Your Professor, URL Email Extractor, Multi-Platform Lead Generator — all shipped and functional within 48 hours. Here's the exact process.</p>
+                <h3>The 48-Hour Stack</h3>
+                <p><strong>Lovable</strong> for the frontend — describe your UI in plain English, get production-ready React. No CSS battles, no component libraries to configure, no deployment headaches. Describe what you want, iterate in natural language, get a live URL in minutes.</p>
+                <p><strong>n8n</strong> for the backend logic — visual workflow builder that handles API calls, data processing, email sending, database writes, and AI operations without writing server code. Everything is a node you connect visually.</p>
+                <p><strong>Webhook</strong> as the bridge — Lovable's form sends data to an n8n webhook URL. n8n processes it and sends back a JSON response. That's the entire architecture. No backend servers to maintain, no endpoints to document.</p>
+                <div class="callout">The secret: Lovable handles everything users see and interact with. n8n handles everything that happens next. A single webhook URL connects them. That's your complete SaaS backend.</div>
+                <h3>Hour-by-Hour Reality</h3>
+                <ul>
+                    <li><strong>Hours 1–4:</strong> Define the problem precisely. Design the n8n workflow. Test each node individually.</li>
+                    <li><strong>Hours 5–12:</strong> Build the Lovable frontend. Connect webhook. Test the full end-to-end flow with real data.</li>
+                    <li><strong>Hours 13–24:</strong> Polish the UI, handle edge cases, add meaningful error messages for failures.</li>
+                    <li><strong>Hours 25–48:</strong> Test with real users, fix the bugs you didn't anticipate, deploy publicly.</li>
+                </ul>
+                <h3>What Actually Takes Time</h3>
+                <p>The technical build is genuinely fast. What takes time is <strong>defining the problem precisely enough</strong> that the automation can handle it without breaking. Spend more effort on workflow design than UI polish — the backend is where value is created and where problems hide.</p>`
+        }
+    };
+
+    /* ── Open post modal ── */
+    function openPost(id) {
+        const p = posts[id];
+        if (!p) return;
+        const tagsHTML = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+        document.getElementById('modal-inner').innerHTML = `
+            <span class="cat-pill ${p.catClass} modal-cat" style="display:inline-block;margin-bottom:1rem;">${p.cat}</span>
+            <div class="modal-title">${p.title}</div>
+            <div class="modal-meta-row">
+                <span class="modal-meta-item">📅 ${p.date}</span>
+                <span class="modal-meta-item">⏱ ${p.readTime}</span>
+            </div>
+            <div class="modal-divider"></div>
+            <div class="article-body">${p.body}</div>
+            <div class="article-tags">${tagsHTML}</div>`;
+        document.getElementById('modal-backdrop').classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-backdrop').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+
+    function handleBackdropClick(e) {
+        if (e.target === document.getElementById('modal-backdrop')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

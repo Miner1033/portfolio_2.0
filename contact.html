@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Rimon.dev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg:           #04060f;
+      --surface:      rgba(255,255,255,0.03);
+      --surface2:     rgba(255,255,255,0.06);
+      --border:       rgba(255,255,255,0.08);
+      --border-green: rgba(0,255,136,0.35);
+      --border-blue:  rgba(59,130,246,0.3);
+      --green:        #00ff88;
+      --blue:         #3b82f6;
+      --pink:         #f472b6;
+      --text:         #f0f4ff;
+      --muted:        #6b7a99;
+      --dim:          #3d4a66;
+      --error:        #ff6b6b;
+      --font-display: 'Clash Display', sans-serif;
+      --font-body:    'Cabinet Grotesk', sans-serif;
+      --font-serif:   'Instrument Serif', Georgia, serif;
+      --font-mono:    'Fira Code', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025; pointer-events: none; z-index: 0;
+    }
+
+    /* ── GLOWS ── */
+    .glow { position:fixed; border-radius:50%; pointer-events:none; filter:blur(140px); z-index:0; }
+    .g1 { width:560px; height:560px; background:rgba(0,255,136,0.07);  top:-160px; right:-140px; animation: driftA 12s ease-in-out infinite alternate; }
+    .g2 { width:640px; height:640px; background:rgba(59,130,246,0.05); bottom:-120px; left:-200px; animation: driftB 15s ease-in-out infinite alternate; }
+    .g3 { width:360px; height:360px; background:rgba(244,114,182,0.04); top:45%; left:42%; animation: driftA 18s ease-in-out infinite alternate-reverse; }
+
+    @keyframes driftA { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
+    @keyframes driftB { from { transform: translate(0,0); } to { transform: translate(-25px, 30px); } }
+
+    /* ── GRID LINES background decoration ── */
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      padding: 1.25rem 0;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      background: rgba(4,6,15,0.75);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.25rem; color: var(--green);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--muted); font-weight: 400; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      font-family: var(--font-body); color: var(--muted);
+      text-decoration: none; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.02em; transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a.active { color: var(--green); }
+    @media (max-width:500px) { .nav-links { display:none; } }
+
+    /* ── PAGE ── */
+    .page {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      position: relative; z-index: 2;
+    }
+
+    /* ── HERO HEADER ── */
+    .contact-hero {
+      padding: 6rem 0 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .contact-hero { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0 2rem; }
+    }
+
+    .hero-left {}
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--green); letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-label::before { content:''; width:28px; height:1px; background:var(--green); flex-shrink:0; }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700; letter-spacing: -0.03em;
+      line-height: 1.0; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .hero-title .accent { color: var(--green); }
+
+    .hero-subtitle {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.15rem; color: var(--muted);
+      line-height: 1.8; max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── STATUS PILL ── */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      padding: 0.45rem 1rem;
+      background: rgba(0,255,136,0.07);
+      border: 1px solid rgba(0,255,136,0.18);
+      border-radius: 100px;
+      font-family: var(--font-mono); font-size: 0.78rem; color: var(--green);
+    }
+    .status-dot {
+      width: 7px; height: 7px; background: var(--green);
+      border-radius: 50%; flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
+      60%      { box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+    }
+
+    /* ── SOCIAL CARDS (right side of hero) ── */
+    .social-stack {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    .social-card {
+      display: flex; align-items: center; gap: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      text-decoration: none; color: inherit;
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .social-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(0,255,136,0.04));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .social-card:hover { transform: translateX(6px); border-color: var(--border-green); }
+    .social-card:hover::before { opacity: 1; }
+
+    .social-card.blue:hover    { border-color: var(--border-blue); }
+    .social-card.blue::before  { background: linear-gradient(135deg, transparent, rgba(59,130,246,0.04)); }
+    .social-card.pink:hover    { border-color: rgba(244,114,182,0.35); }
+    .social-card.pink::before  { background: linear-gradient(135deg, transparent, rgba(244,114,182,0.04)); }
+    .social-card.green2:hover  { border-color: var(--border-green); }
+
+    .social-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .social-icon.ig { background: rgba(0,255,136,0.09); border: 1px solid rgba(0,255,136,0.2); }
+    .social-icon.ib { background: rgba(59,130,246,0.09); border: 1px solid rgba(59,130,246,0.2); }
+    .social-icon.ip { background: rgba(244,114,182,0.09); border: 1px solid rgba(244,114,182,0.2); }
+    .social-icon.io { background: rgba(255,200,100,0.09); border: 1px solid rgba(255,200,100,0.2); }
+
+    .social-info { flex: 1; }
+    .social-label {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .social-value {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 600; color: var(--text);
+    }
+
+    .social-arrow {
+      color: var(--dim); font-size: 1.1rem;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .social-card:hover .social-arrow { transform: translateX(4px); color: var(--green); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ── FORM SECTION ── */
+    .form-section { padding: 5rem 0 7rem; }
+
+    .form-header { margin-bottom: 3rem; }
+
+    .form-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.1rem; color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Form layout: 2 col top, full below */
+    .contact-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .form-full { grid-column: 1 / -1; }
+
+    @media (max-width: 600px) {
+      .contact-form { grid-template-columns: 1fr; }
+      .form-full { grid-column: 1; }
+    }
+
+    /* ── FIELD GROUP ── */
+    .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .field-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem; color: var(--muted);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .field-label .req { color: var(--green); }
+
+    .field-input, .field-textarea, .field-select {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      appearance: none;
+    }
+    .field-input::placeholder, .field-textarea::placeholder { color: var(--dim); }
+    .field-input:focus, .field-textarea:focus, .field-select:focus {
+      border-color: rgba(0,255,136,0.4);
+      background: rgba(0,255,136,0.03);
+      box-shadow: 0 0 0 3px rgba(0,255,136,0.08);
+    }
+    .field-input.error, .field-textarea.error {
+      border-color: rgba(255,107,107,0.5);
+      box-shadow: 0 0 0 3px rgba(255,107,107,0.08);
+    }
+    .field-input.error:focus, .field-textarea.error:focus {
+      border-color: rgba(255,107,107,0.6);
+    }
+
+    .field-textarea { resize: vertical; min-height: 140px; line-height: 1.7; }
+
+    .field-select { cursor: pointer; }
+    .field-select option { background: #0d1225; color: var(--text); }
+
+    .field-error {
+      font-family: var(--font-mono);
+      font-size: 0.72rem; color: var(--error);
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    /* ── CHAR COUNTER ── */
+    .char-counter {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: var(--dim); text-align: right; margin-top: -0.25rem;
+    }
+    .char-counter.warn { color: #f59e0b; }
+    .char-counter.over { color: var(--error); }
+
+    /* ── SUBMIT BTN ── */
+    .submit-row {
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .submit-btn {
+      position: relative;
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 1rem 2.2rem;
+      background: var(--green);
+      color: #04060f;
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      border: none; border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      overflow: hidden;
+      letter-spacing: 0.01em;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.18);
+      border-radius: 50%;
+      transform: translate(-50%,-50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+    .submit-btn:hover { background: #00e07a; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,255,136,0.25); }
+    .submit-btn:hover::before { width: 300px; height: 300px; }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-icon { font-size: 1.1rem; transition: transform 0.2s; }
+    .submit-btn:hover .btn-icon { transform: translateX(3px); }
+
+    .submit-note {
+      font-family: var(--font-mono);
+      font-size: 0.75rem; color: var(--dim);
+      max-width: 240px; line-height: 1.6;
+    }
+
+    /* ── TOAST NOTIFICATION ── */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid;
+      display: flex; align-items: center; gap: 0.75rem;
+      font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      backdrop-filter: blur(16px);
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+      max-width: 340px;
+    }
+    .toast.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+    .toast.success {
+      background: rgba(0,255,136,0.1);
+      border-color: rgba(0,255,136,0.3);
+      color: var(--green);
+    }
+    .toast.error {
+      background: rgba(255,107,107,0.1);
+      border-color: rgba(255,107,107,0.3);
+      color: #ff6b6b;
+    }
+    .toast-icon { font-size: 1.3rem; }
+    .toast-msg { flex: 1; color: var(--text); }
+    .toast-msg strong { display:block; color: inherit; }
+    .toast-close { background:none; border:none; color:var(--dim); cursor:pointer; font-size:1rem; padding:0; transition:color 0.2s; }
+    .toast-close:hover { color: var(--text); }
+
+    /* ── LOADING SPINNER ── */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(4,6,15,0.3);
+      border-top-color: #04060f;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .submit-btn.loading .spinner { display: block; }
+    .submit-btn.loading .btn-text { opacity: 0.6; }
+    .submit-btn.loading .btn-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── INFO BAR ── */
+    .info-bar {
+      margin-top: 4rem;
+      padding: 1.5rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      display: flex; align-items: center; gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .info-item { display: flex; align-items: center; gap: 0.65rem; }
+    .info-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .info-text { font-family: var(--font-body); font-size: 0.88rem; color: var(--muted); }
+    .info-text strong { color: var(--text); }
+    .info-divider { width: 1px; height: 1.5rem; background: var(--border); }
+    @media (max-width:600px) { .info-bar { flex-direction: column; align-items: flex-start; } .info-divider { display:none; } }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-family: var(--font-body); color: var(--dim); font-size: 0.85rem; }
+    .footer-made { font-family: var(--font-mono); color: var(--dim); font-size: 0.82rem; }
+    .footer-made span { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .a1 { opacity:0; animation: fadeUp 0.7s ease forwards 0.1s; }
+    .a2 { opacity:0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .a3 { opacity:0; animation: fadeUp 0.7s ease forwards 0.35s; }
+    .a4 { opacity:0; animation: fadeUp 0.7s ease forwards 0.5s; }
+    .a5 { opacity:0; animation: fadeUp 0.7s ease forwards 0.65s; }
+
+    .fade-up { opacity:0; transform:translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
+<div class="grid-bg"></div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Rimon<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="education.html">Education</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ══════════ HERO ══════════ -->
+  <div class="contact-hero">
+
+    <div class="hero-left">
+      <div class="section-label a1">Let's Connect</div>
+      <h1 class="hero-title a2">Say <span class="accent">Hello.</span></h1>
+      <p class="hero-subtitle a3">
+        Open to collaborations, research partnerships, automation projects, and new opportunities. I'd love to hear from you.
+      </p>
+      <div class="a4">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          Available for opportunities
+        </span>
+      </div>
+    </div>
+
+    <!-- Social links -->
+    <div class="social-stack a5">
+
+      <div class="social-card green2">
+        <div class="social-icon ig">👤</div>
+        <div class="social-info">
+          <div class="social-label">Full Name</div>
+          <div class="social-value">Md. Miner Hossain Rimon</div>
+        </div>
+      </div>
+
+      <a class="social-card" href="mailto:minerhossainrimon1033@gmail.com">
+        <div class="social-icon ig">✉️</div>
+        <div class="social-info">
+          <div class="social-label">Email</div>
+          <div class="social-value">minerhossainrimon1033@gmail.com</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <a class="social-card" href="tel:+8801615504149">
+        <div class="social-icon ig">📞</div>
+        <div class="social-info">
+          <div class="social-label">Phone</div>
+          <div class="social-value">+880 1615 504149</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <a class="social-card" href="https://wa.me/8801615504149" target="_blank" rel="noopener">
+        <div class="social-icon ig" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+        </div>
+        <div class="social-info">
+          <div class="social-label">WhatsApp</div>
+          <div class="social-value">+880 1615 504149</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <a class="social-card blue" href="https://github.com/Miner1033" target="_blank" rel="noopener">
+        <div class="social-icon ib">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+          </svg>
+        </div>
+        <div class="social-info">
+          <div class="social-label">GitHub</div>
+          <div class="social-value">github.com/Miner1033</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <a class="social-card" style="--hover-border: rgba(59,130,246,0.35);"
+         href="https://www.linkedin.com/in/md-miner-hossain-rimon-831490327/" target="_blank" rel="noopener">
+        <div class="social-icon ib">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+          </svg>
+        </div>
+        <div class="social-info">
+          <div class="social-label">LinkedIn</div>
+          <div class="social-value">Connect on LinkedIn</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <a class="social-card pink" href="https://arxiv.org/abs/2512.02023" target="_blank" rel="noopener">
+        <div class="social-icon ip">📄</div>
+        <div class="social-info">
+          <div class="social-label">Research</div>
+          <div class="social-value">arXiv Publication</div>
+        </div>
+        <span class="social-arrow">→</span>
+      </a>
+
+      <div class="social-card green2" style="cursor:default;">
+        <div class="social-icon ig">📍</div>
+        <div class="social-info">
+          <div class="social-label">Location</div>
+          <div class="social-value">Sylhet, Bangladesh</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /hero -->
+
+</div><!-- /page -->
+
+<div class="divider"></div>
+
+<!-- ══════════ FORM SECTION ══════════ -->
+<div class="page">
+  <div class="form-section">
+
+    <div class="form-header fade-up">
+      <div class="section-label">Drop a Message</div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.4rem);font-weight:700;letter-spacing:-0.02em;color:var(--text);margin-bottom:0.4rem;">
+        Send me an email
+      </h2>
+      <p class="form-tagline">Fill in the form and I'll get back to you within 24 hours.</p>
+    </div>
+
+    <!--
+      HOW TO ACTIVATE:
+      1. Go to https://formspree.io → create free account → New Form
+      2. Replace "YOUR_FORM_ID" in the action URL below with your form ID
+         e.g. action="https://formspree.io/f/xrgvwkpj"
+      3. Done — submissions go straight to your email inbox, no backend needed!
+    -->
+    <form
+      class="contact-form fade-up"
+      id="contactForm"
+      action="https://formspree.io/f/YOUR_FORM_ID"
+      method="POST"
+      novalidate
+    >
+
+      <!-- Name -->
+      <div class="field-group">
+        <label class="field-label" for="name">Name <span class="req">*</span></label>
+        <input class="field-input" type="text" id="name" name="name"
+               placeholder="Your full name" autocomplete="name" />
+        <span class="field-error" id="nameError">Please enter your name.</span>
+      </div>
+
+      <!-- Email -->
+      <div class="field-group">
+        <label class="field-label" for="email">Email <span class="req">*</span></label>
+        <input class="field-input" type="email" id="email" name="email"
+               placeholder="you@example.com" autocomplete="email" />
+        <span class="field-error" id="emailError">Please enter a valid email.</span>
+      </div>
+
+      <!-- Subject -->
+      <div class="field-group form-full">
+        <label class="field-label" for="subject">Subject <span class="req">*</span></label>
+        <select class="field-input field-select" id="subject" name="subject">
+          <option value="" disabled selected>Select a topic…</option>
+          <option value="Collaboration">🤝 Collaboration / Project</option>
+          <option value="Job Opportunity">💼 Job / Internship Opportunity</option>
+          <option value="Research">🔬 Research / Paper Discussion</option>
+          <option value="AI Automation">🤖 AI Automation Inquiry</option>
+          <option value="Freelance">💡 Freelance Work</option>
+          <option value="Other">✉️ Other</option>
+        </select>
+        <span class="field-error" id="subjectError">Please select a subject.</span>
+      </div>
+
+      <!-- Message -->
+      <div class="field-group form-full">
+        <label class="field-label" for="message">Message <span class="req">*</span></label>
+        <textarea class="field-textarea" id="message" name="message"
+                  placeholder="Tell me about your project, idea, or question…"
+                  maxlength="1000"></textarea>
+        <div class="char-counter" id="charCounter">0 / 1000</div>
+        <span class="field-error" id="messageError">Please write a message (at least 20 characters).</span>
+      </div>
+
+      <!-- Hidden honeypot anti-spam -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <!-- Submit -->
+      <div class="form-full submit-row">
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <div class="spinner"></div>
+          <span class="btn-text">Send Message</span>
+          <span class="btn-icon">→</span>
+        </button>
+        <p class="submit-note">
+          Your message goes directly to my inbox. I reply within 24 hours.
+        </p>
+      </div>
+
+    </form>
+
+    <!-- Info bar -->
+    <div class="info-bar fade-up" style="transition-delay:0.2s;">
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text">Response time: <strong>within 24 hrs</strong></div>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-item">
+        <div class="info-dot" style="background:var(--blue);"></div>
+        <div class="info-text">Best for: <strong>Collaboration &amp; Opportunities</strong></div>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-item">
+        <div class="info-dot" style="background:var(--pink);"></div>
+        <div class="info-text">Location: <strong>Sylhet, Bangladesh</strong></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">© 2026 Md. Miner Hossain Rimon</p>
+    <p class="footer-made">Powered by <span>AI &amp; Innovation</span></p>
+  </div>
+</footer>
+
+<!-- ══════════ TOAST ══════════ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <div class="toast-msg">
+    <strong id="toastTitle"></strong>
+    <span id="toastBody"></span>
+  </div>
+  <button class="toast-close" onclick="hideToast()">✕</button>
+</div>
+
+<!-- ══════════ JS ══════════ -->
+<script>
+  /* ── Scroll fade-up ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  /* ── Char counter ── */
+  const msgField   = document.getElementById('message');
+  const charCtr    = document.getElementById('charCounter');
+  msgField.addEventListener('input', () => {
+    const len = msgField.value.length;
+    charCtr.textContent = `${len} / 1000`;
+    charCtr.className = 'char-counter' + (len > 900 ? ' over' : len > 750 ? ' warn' : '');
+  });
+
+  /* ── Validation helpers ── */
+  function showErr(id, show) {
+    const el = document.getElementById(id);
+    el && el.classList.toggle('show', show);
+  }
+  function markField(id, invalid) {
+    const el = document.getElementById(id);
+    el && el.classList.toggle('error', invalid);
+  }
+
+  function validate() {
+    const name    = document.getElementById('name').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value.trim();
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const nameOk    = name.length > 0;
+    const emailOk   = emailRe.test(email);
+    const subjectOk = subject.length > 0;
+    const msgOk     = message.length >= 20;
+
+    markField('name',    !nameOk);    showErr('nameError',    !nameOk);
+    markField('email',   !emailOk);   showErr('emailError',   !emailOk);
+    markField('subject', !subjectOk); showErr('subjectError', !subjectOk);
+    markField('message', !msgOk);     showErr('messageError', !msgOk);
+
+    return nameOk && emailOk && subjectOk && msgOk;
+  }
+
+  /* ── Clear errors on input ── */
+  ['name','email','subject','message'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      markField(id, false);
+      showErr(id + 'Error', false);
+    });
+  });
+
+  /* ── Toast ── */
+  let toastTimer;
+  function showToast(type, title, body) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent  = type === 'success' ? '✅' : '❌';
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastBody').textContent  = body;
+    t.className = `toast ${type} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 5500);
+  }
+  function hideToast() {
+    document.getElementById('toast').classList.remove('show');
+  }
+
+  /* ── Form submission ── */
+  const form      = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    // Check if Formspree ID is configured
+    const action = form.action;
+    if (action.includes('YOUR_FORM_ID')) {
+      showToast('error',
+        'Form not configured yet.',
+        'Replace YOUR_FORM_ID in the HTML with your Formspree form ID.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.classList.add('loading');
+
+    try {
+      const data = new FormData(form);
+      const res  = await fetch(action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.reset();
+        charCtr.textContent = '0 / 1000';
+        showToast('success', 'Message sent!', 'Thanks! I\'ll reply within 24 hours.');
+      } else {
+        const json = await res.json().catch(() => ({}));
+        const msg  = json?.errors?.map(x => x.message).join(', ') || 'Something went wrong.';
+        showToast('error', 'Sending failed.', msg);
+      }
+    } catch {
+      showToast('error', 'Network error.', 'Please check your connection and try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+    }
+  });
+</script>
+
+</body>
+</html>
