@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Md. Miner Hossain Rimon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:           #04060f;
+            --surface:      rgba(255,255,255,0.03);
+            --surface2:     rgba(255,255,255,0.06);
+            --border:       rgba(255,255,255,0.08);
+            --border-green: rgba(0,255,136,0.35);
+            --border-blue:  rgba(59,130,246,0.3);
+            --green:  #00ff88;
+            --blue:   #3b82f6;
+            --pink:   #f472b6;
+            --text:   #f0f4ff;
+            --muted:  #6b7a99;
+            --dim:    #3d4a66;
+            --font-display: 'Clash Display', 'Segoe UI', sans-serif;
+            --font-body:    'Cabinet Grotesk', 'Segoe UI', sans-serif;
+            --font-serif:   'Instrument Serif', Georgia, serif;
+            --font-mono:    'Fira Code', 'Courier New', monospace;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body.modal-open { overflow: hidden; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .glow-1, .glow-2 {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(130px);
+            z-index: 0;
+        }
+        .glow-1 { width: 500px; height: 500px; background: rgba(0,255,136,0.06); top: -150px; right: -150px; }
+        .glow-2 { width: 600px; height: 600px; background: rgba(59,130,246,0.04); bottom: 0; left: -200px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 1.25rem 0;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            background: rgba(4,6,15,0.75);
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--green);
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
+        .logo span { color: var(--muted); font-weight: 400; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            font-family: var(--font-body);
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--green); }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            padding: 6rem 0 3rem;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.2s;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--green); }
+        .back-link::before { content: '←'; }
+        .page-label {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--green);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .page-label::after { content: ''; width: 48px; height: 1px; background: var(--green); opacity: 0.4; }
+        h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+        h1 .accent { color: var(--green); }
+        .page-desc {
+            font-family: var(--font-body);
+            font-style: normal;
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 640px;
+            line-height: 2;
+            font-weight: 500;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.4s;
+        }
+        .filter-btn {
+            padding: 0.4rem 1.1rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: var(--green); color: var(--green); }
+        .filter-btn.active {
+            background: rgba(0,255,136,0.1);
+            border-color: rgba(0,255,136,0.35);
+            color: var(--green);
+        }
+
+        /* ── PROJECTS GRID ── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            padding-bottom: 6rem;
+        }
+
+        .project-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            background: var(--surface);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 240px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .project-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: radial-gradient(circle at 50% 0%, rgba(0,255,136,0.05), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .project-card:hover {
+            border-color: var(--border-green);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.35);
+        }
+        .project-card:hover::after { opacity: 1; }
+
+        .project-card.placeholder { border-style: dashed; border-color: var(--dim); cursor: default; }
+        .project-card.placeholder:hover { border-color: rgba(0,255,136,0.2); transform: none; box-shadow: none; }
+        .project-card.placeholder::after { display: none; }
+        .project-card.placeholder .project-title { font-size: 1.1rem; }
+        .project-placeholder-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: var(--dim);
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .project-placeholder-label::before { content: '◉'; opacity: 0.4; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+        .project-number {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-bottom: 1.25rem;
+        }
+        .project-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+        .project-desc {
+            font-family: var(--font-body);
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.75;
+            flex: 1;
+        }
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag {
+            padding: 0.28rem 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            border-radius: 6px;
+            background: rgba(59,130,246,0.08);
+            border: 1px solid rgba(59,130,246,0.18);
+            color: #93c5fd;
+        }
+        .tag.green {
+            background: rgba(0,255,136,0.07);
+            border-color: rgba(0,255,136,0.18);
+            color: #6ee7b7;
+        }
+
+        /* View details hint */
+        .view-hint {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--dim);
+            transition: color 0.2s;
+        }
+        .project-card:hover .view-hint { color: var(--green); }
+        .view-hint::before { content: '→'; }
+
+        .project-placeholder-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: var(--dim);
+            font-size: 0.78rem;
+            font-family: var(--font-mono);
+        }
+        .project-placeholder-label::before { content: '//'; opacity: 0.5; }
+
+        /* Project thumbnail preview */
+        .project-thumb {
+            width: calc(100% + 4rem);
+            margin: -2rem -2rem 1.5rem -2rem;
+            height: 170px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 12px 12px 0 0;
+            display: block;
+            border-bottom: 1px solid var(--border);
+            transition: object-position 0.6s ease;
+        }
+        .project-card:hover .project-thumb { object-position: bottom; }
+
+        /* Modal gallery */
+        .gallery-main {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: block;
+            margin-bottom: 0.75rem;
+            max-height: 400px;
+            object-fit: cover;
+            object-position: top;
+            transition: opacity 0.2s ease;
+        }
+        .gallery-strip {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .gallery-thumb {
+            width: 80px;
+            height: 55px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 7px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.2s, opacity 0.2s;
+            opacity: 0.55;
+        }
+        .gallery-thumb:hover { opacity: 0.85; border-color: var(--muted); }
+        .gallery-thumb.gallery-active { border-color: var(--green); opacity: 1; }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(4,6,15,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #080d1e;
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 780px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(0,255,136,0.05);
+        }
+        .modal-backdrop.open .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Scrollbar */
+        .modal::-webkit-scrollbar { width: 5px; }
+        .modal::-webkit-scrollbar-track { background: transparent; }
+        .modal::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 10px; }
+
+        .modal-top-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--blue), var(--pink));
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-body { padding: 2.5rem 3rem 3rem; }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.75rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        .modal-close:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); }
+
+        .modal-number {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--dim);
+            letter-spacing: 0.12em;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+            line-height: 1.1;
+        }
+
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-divider {
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .modal-desc {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            color: var(--muted);
+            line-height: 1.85;
+            margin-bottom: 2rem;
+        }
+
+        .modal-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-meta-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .modal-meta-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--dim);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-meta-value {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.75rem;
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 7px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background: var(--green); color: #04060f; }
+        .btn-primary:hover { background: #00e07a; transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--green); color: var(--green); transform: translateY(-1px); }
+
+        /* Placeholder modal style */
+        .modal-placeholder {
+            text-align: center;
+            padding: 3rem 0 1rem;
+        }
+        .modal-placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.3;
+        }
+        .modal-placeholder-text {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--dim);
+        }
+
+        /* ── FOOTER ── */
+        footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-copy { font-family: var(--font-body); color: var(--dim); font-size: 0.85rem; }
+        .footer-made { font-family: var(--font-mono); color: var(--dim); font-size: 0.82rem; }
+        .footer-made span { color: var(--green); }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .nav-links { gap: 1.5rem; }
+            .footer-inner { justify-content: center; text-align: center; }
+            .modal-body { padding: 2rem 1.75rem 2.5rem; }
+            .modal-meta-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 500px) {
+            .nav-links { display: none; }
+            h1 { font-size: 2.2rem; }
+            .modal-title { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- ── MODAL ── -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+    <div class="modal" id="modal">
+        <div class="modal-top-bar"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+    <div class="container">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">Rimon<span>.dev</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="education.html">Education</a></li>
+                               
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <a href="index.html" class="back-link">Back to Home</a>
+        <div class="page-label">Portfolio</div>
+        <h1>All <span class="accent">Projects</span></h1>
+        <p class="page-desc">A collection of my work across AI automation, machine learning,<br>web development, and mobile app development.<br>Each project is built to solve a real problem — from intelligent<br>chatbots and RAG pipelines to full-stack platforms and Android apps.</p>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterProjects('all', this)">All</button>
+        <button class="filter-btn" onclick="filterProjects('ml', this)">Machine Learning</button>
+        <button class="filter-btn" onclick="filterProjects('automation', this)">AI Automation</button>
+        <button class="filter-btn" onclick="filterProjects('web', this)">Web Dev</button>
+        <button class="filter-btn" onclick="filterProjects('appdev', this)">App Dev</button>
+    </div>
+
+    <!-- PROJECTS GRID -->
+    <div class="projects-grid" id="projects-grid">
+
+        <!-- ── Project 01 ── -->
+        <div class="project-card fade-up" data-category="ml web" onclick="openModal(this)">
+            <img src="student_dashboard.jpg" alt="Learn ML With Miner preview" class="project-thumb">
+            <div class="project-number">01 / LEARNING PLATFORM</div>
+            <div class="project-title">Learn ML With Miner</div>
+            <p class="project-desc">A beginner-friendly web platform to learn Machine Learning step by step — with dashboards, quizzes, admin panel & email verification.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">PHP</span>
+                    <span class="tag">MySQL</span>
+                    <span class="tag">Bootstrap 5</span>
+                    <span class="tag green">Machine Learning</span>
+                    <span class="tag green">Full Stack</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "01 / LEARNING PLATFORM",
+                "title": "Learn ML With Miner",
+                "tags": [
+                    {"label": "PHP", "type": "blue"},
+                    {"label": "MySQL", "type": "blue"},
+                    {"label": "JavaScript", "type": "blue"},
+                    {"label": "Bootstrap 5", "type": "blue"},
+                    {"label": "PHPMailer", "type": "blue"},
+                    {"label": "Machine Learning", "type": "green"},
+                    {"label": "Full Stack", "type": "green"},
+                    {"label": "XAMPP", "type": "green"}
+                ],
+                "desc": "Learn ML With Miner is a beginner-friendly web platform designed to help users learn Machine Learning step by step. The platform includes a complete user registration and login system with email verification, an admin dashboard with full CRUD functionality for managing users and tasks, and interactive ML tutorials, practice problems, and quizzes covering topics such as ML Fundamentals, Supervised Learning, Unsupervised Learning, Deep Learning, Artificial Neural Networks, Natural Language Processing, and more. Built using PHP, MySQL, JavaScript, Bootstrap 5, and PHPMailer (without Composer), and hosted locally on XAMPP.",
+                "meta": [
+                    {"label": "Stack", "value": "PHP, MySQL, JS, Bootstrap 5"},
+                    {"label": "Auth", "value": "Email Verification + Login"},
+                    {"label": "Server", "value": "XAMPP (Local)"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["student_dashboard.jpg", "supervised.jpg", "admin_dashboard.jpg"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 02 (Find Your Professor) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:0.1s" onclick="openModal(this)">
+            <img src="find4.jpg" alt="Find Your Professor preview" class="project-thumb">
+            <div class="project-number">02 / AI AUTOMATION</div>
+            <div class="project-title">Find Your Professor</div>
+            <p class="project-desc">A SaaS tool that helps students discover professors by research field & location — returning top 10 results with profile URLs, downloadable as CSV/Excel.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">Apify</span>
+                    <span class="tag">Lovable</span>
+                    <span class="tag green">AI Automation</span>
+                    <span class="tag green">SaaS</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "02 / AI AUTOMATION",
+                "title": "Find Your Professor — by MHR",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "Apify", "type": "blue"},
+                    {"label": "Google Search Nodes", "type": "blue"},
+                    {"label": "Lovable", "type": "blue"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "SaaS", "type": "green"},
+                    {"label": "Web Scraping", "type": "green"}
+                ],
+                "desc": "Endless Google searches, scattered university pages, and no clear direction — that's the problem Find Your Professor solves.\n\nA simple SaaS tool that helps students discover professors based on research field and location.\n\n🚀 How it works — Just type one search like:\n👉 AI / ML Professor – Dhaka\n👉 Cyber Security Professor – Germany\n\n✅ You instantly get:\n• Top 10 relevant professor results\n• Professor name & research area\n• University name & official profile URL\n• Location-based filtering\n• Download all results as CSV or Excel sheet\n\n🛠 Built With:\nThis product is built using n8n, Apify, Google Search nodes, and Lovable to automate professor discovery and convert search data into structured, downloadable results.\n\nDesigned to save hours of manual research and help students focus on strong applications — not endless searching.",
+                "meta": [
+                    {"label": "Type", "value": "SaaS / AI Automation"},
+                    {"label": "Stack", "value": "n8n, Apify, Lovable"},
+                    {"label": "Output", "value": "CSV & Excel Download"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["find4.jpg", "find1.jpg", "find2.jpg", "find3.jpg"],
+                "video": "find5.mp4",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 03 (RAG AI Agent) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:0.2s" onclick="openModal(this)">
+            <img src="rag2.jpg" alt="RAG AI Agent workflow preview" class="project-thumb">
+            <div class="project-number">03 / AI AUTOMATION</div>
+            <div class="project-title">AI Agent with RAG</div>
+            <p class="project-desc">A fully automated AI query system using RAG — from Lovable form submission to Pinecone retrieval, OpenAI response, Gmail reply & Google Sheets logging.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">Pinecone</span>
+                    <span class="tag green">RAG</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "03 / AI AUTOMATION",
+                "title": "AI Agent with RAG (Retrieval-Augmented Generation)",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "Pinecone", "type": "blue"},
+                    {"label": "Lovable", "type": "blue"},
+                    {"label": "Gmail", "type": "blue"},
+                    {"label": "Google Sheets", "type": "blue"},
+                    {"label": "RAG", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Webhooks", "type": "green"}
+                ],
+                "desc": "An AI-powered query handling system built end-to-end with full automation.\n\n🔄 How the pipeline works:\n• User submits a query through a Lovable form\n• Request is received via Webhook trigger in n8n\n• RAG pipeline retrieves relevant context from Pinecone Vector Store\n• OpenAI generates accurate, context-aware responses\n• Automated email replies are sent via Gmail\n• All queries and responses are logged in Google Sheets\n\nThe knowledge base is built automatically — when a new file is added to Google Drive, it is downloaded, embedded via OpenAI Embeddings, and stored in Pinecone for future retrieval.\n\nBuilt for smart customer support, faster responses, and scalable AI automation.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / RAG"},
+                    {"label": "Stack", "value": "n8n, OpenAI, Pinecone"},
+                    {"label": "Integrations", "value": "Gmail, Google Sheets, Drive"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["rag2.jpg", "rag3.jpg", "rag1.jpg"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 04 (LangFlow RAG) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:0.3s" onclick="openModal(this)">
+            <img src="lrag.jpg" alt="LangFlow RAG pipeline preview" class="project-thumb">
+            <div class="project-number">04 / AI AUTOMATION</div>
+            <div class="project-title">RAG Pipeline with LangFlow</div>
+            <p class="project-desc">A powerful LangFlow RAG pipeline that turns PDFs into conversational knowledge bases — using Astra DB, OpenAI Embeddings & GPT-4o-mini.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">LangFlow</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">Astra DB</span>
+                    <span class="tag green">RAG</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "04 / AI AUTOMATION",
+                "title": "RAG Pipeline with LangFlow",
+                "tags": [
+                    {"label": "LangFlow", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "Astra DB", "type": "blue"},
+                    {"label": "GPT-4o-mini", "type": "blue"},
+                    {"label": "RAG", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Vector Search", "type": "green"}
+                ],
+                "desc": "Built a powerful RAG (Retrieval-Augmented Generation) pipeline using LangFlow that turns PDFs into conversational knowledge bases.\n\n🔁 Workflow steps:\n\n1️⃣ Read File — Extracts raw text content from uploaded PDF documents\n\n2️⃣ Split Text — Chunks the content into manageable pieces (Chunk Size: 1000, Overlap: 200) for more accurate retrieval\n\n3️⃣ OpenAI Embeddings — Uses the text-embedding-3-small model to generate semantic vector embeddings from each chunk\n\n4️⃣ Astra DB — Stores vector embeddings and handles semantic search queries against the knowledge base\n\n5️⃣ Prompt Template — Dynamically injects retrieved context and user question into a structured prompt\n\n6️⃣ OpenAI GPT-4o-mini — Generates precise, context-aware answers with temperature set to 0.1 for accuracy\n\n✨ Result: Fast and accurate answers from large documents — a strong foundation for AI assistants and document-based chatbots.",
+                "meta": [
+                    {"label": "Type", "value": "RAG / AI Automation"},
+                    {"label": "Stack", "value": "LangFlow, OpenAI, Astra DB"},
+                    {"label": "Model", "value": "GPT-4o-mini + text-embedding-3-small"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["lrag.jpg", "lrag2.jpg", "lrag3.jpg"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 05 (Kommodo AI Lead Generation) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:0.4s" onclick="openModal(this)">
+            <img src="kadommo2.png" alt="Kommodo AI Lead Generation preview" class="project-thumb">
+            <div class="project-number">05 / AI AUTOMATION</div>
+            <div class="project-title">Multi-Platform Lead Generation</div>
+            <p class="project-desc">AI-powered automation that collects company & social media leads from LinkedIn, Twitter, Instagram & Google Maps — with name, email, phone & website.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">Lovable</span>
+                    <span class="tag">API</span>
+                    <span class="tag green">Lead Generation</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "05 / AI AUTOMATION",
+                "title": "Multi-Platform Lead Generation Automation",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "Lovable", "type": "blue"},
+                    {"label": "Webhook", "type": "blue"},
+                    {"label": "REST API", "type": "blue"},
+                    {"label": "LinkedIn", "type": "blue"},
+                    {"label": "Twitter / X", "type": "blue"},
+                    {"label": "Instagram", "type": "blue"},
+                    {"label": "Google Maps", "type": "blue"},
+                    {"label": "Lead Generation", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "SaaS", "type": "green"}
+                ],
+                "desc": "A fully automated multi-platform lead generation system — Kommodo AI — that collects company and social media leads across major platforms in one place.\n\n🏢 Company Lead Collection:\n• Automated collection of company name, email, website, and phone number via API\n• Filter by Company Location, Industry, Company Size, Annual Revenue, and Specialties/Keywords\n• Results displayed in a structured webhook output table with direct website links\n• Export leads in structured format for outreach pipelines\n\n👤 Prospect Search Workflows:\n• Built search automations for LinkedIn, X (Twitter), Instagram, and Google Maps\n• Extracts profile URL, full name, username, and public email when available\n• Filter prospects by Job Title, Management Level, Department, Location, and Industry\n• AI Search bar lets users describe leads in plain language — Kommodo searches across all platforms automatically\n\n🖥️ Frontend (Kommodo AI):\n• Clean dark-themed UI built with Lovable\n• Dual-tab navigation: Prospects and Companies\n• Live backend connection status indicator\n• Webhook output panel shows real-time structured results\n• Designed to simplify B2B outreach and reduce manual prospecting time",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / Lead Gen"},
+                    {"label": "Stack", "value": "n8n, Lovable, Webhook API"},
+                    {"label": "Platforms", "value": "LinkedIn, Twitter, Instagram, Google Maps"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["kadommo2.png", "kadommo3.png", "kadommo1.png"],
+                "video": "kadommo4.mp4",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 06 (Bootstrap Landing Page) ── -->
+        <div class="project-card fade-up" data-category="web" style="transition-delay:0.5s" onclick="openModal(this)">
+            <img src="boot.jpg" alt="Bootstrap Landing Page preview" class="project-thumb">
+            <div class="project-number">06 / WEB DEVELOPMENT</div>
+            <div class="project-title">Bootstrap Landing Page</div>
+            <p class="project-desc">A clean and responsive product landing page built with Bootstrap and internal CSS — designed as a frontend web design project.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">Bootstrap</span>
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag green">Web Design</span>
+                    <span class="tag green">Frontend</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "06 / WEB DEVELOPMENT",
+                "title": "Bootstrap Landing Page",
+                "tags": [
+                    {"label": "Bootstrap", "type": "blue"},
+                    {"label": "HTML", "type": "blue"},
+                    {"label": "CSS", "type": "blue"},
+                    {"label": "Web Design", "type": "green"},
+                    {"label": "Frontend", "type": "green"}
+                ],
+                "desc": "A clean, modern and fully responsive product landing page built using Bootstrap with internal CSS styling. The project features a professional navigation bar, a hero section with a product illustration, call-to-action buttons, and a structured layout — demonstrating strong frontend web design skills for real-world client projects.",
+                "meta": [
+                    {"label": "Category", "value": "Web Development"},
+                    {"label": "Stack", "value": "Bootstrap, HTML, CSS"},
+                    {"label": "Type", "value": "Frontend Project"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "image": "boot.jpg",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 07 (Tailwind Figma to Web) ── -->
+        <div class="project-card fade-up" data-category="web" style="transition-delay:0.6s" onclick="openModal(this)">
+            <img src="tailwind.jpg" alt="MediBridge Healthcare Website preview" class="project-thumb">
+            <div class="project-number">07 / WEB DEVELOPMENT</div>
+            <div class="project-title">MediBridge — Figma to Web</div>
+            <p class="project-desc">A full healthcare website converted from Figma design to live frontend using Tailwind CSS — featuring doctors, services, testimonials & FAQ.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">Tailwind CSS</span>
+                    <span class="tag">HTML</span>
+                    <span class="tag green">Figma to Web</span>
+                    <span class="tag green">Frontend</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "07 / WEB DEVELOPMENT",
+                "title": "MediBridge — Figma to Web",
+                "tags": [
+                    {"label": "Tailwind CSS", "type": "blue"},
+                    {"label": "HTML", "type": "blue"},
+                    {"label": "Figma to Web", "type": "green"},
+                    {"label": "Frontend", "type": "green"},
+                    {"label": "Healthcare", "type": "blue"}
+                ],
+                "desc": "A pixel-perfect conversion of a professional Figma healthcare website design into a fully responsive live frontend using Tailwind CSS. The MediBridge project includes a hero section with doctor profiles, a features grid, specialized services section, doctor listings with pricing, patient testimonials, an FAQ accordion, and a complete footer — faithfully reproducing every detail from the original Figma design.",
+                "meta": [
+                    {"label": "Category", "value": "Web Development"},
+                    {"label": "Stack", "value": "Tailwind CSS, HTML"},
+                    {"label": "Type", "value": "Figma to Web"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "image": "tailwind.jpg",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 08 (URL to Email SaaS) ── -->
+        <div class="project-card fade-up" data-category="automation web" style="transition-delay:0.7s" onclick="openModal(this)">
+            <img src="urlem3.png" alt="URL to Email Extractor preview" class="project-thumb">
+            <div class="project-number">08 / AI AUTOMATION</div>
+            <div class="project-title">URL to Email — SaaS Extractor</div>
+            <p class="project-desc">Paste any website URL and instantly extract all real email addresses — deduped, validated & delivered to your inbox via Gmail. Built with Lovable & n8n.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">Lovable</span>
+                    <span class="tag">Gmail API</span>
+                    <span class="tag green">AI Automation</span>
+                    <span class="tag green">SaaS</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "08 / AI AUTOMATION",
+                "title": "URL to Email — SaaS Email Extractor",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "Lovable", "type": "blue"},
+                    {"label": "Webhook", "type": "blue"},
+                    {"label": "HTTP Request", "type": "blue"},
+                    {"label": "JavaScript", "type": "blue"},
+                    {"label": "Gmail API", "type": "blue"},
+                    {"label": "Google Sheets", "type": "blue"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "SaaS", "type": "green"},
+                    {"label": "Lead Generation", "type": "green"}
+                ],
+                "desc": "A smart SaaS tool — GenZ Email Extract — that takes any website URL and automatically hunts down every real email address hiding across that site's pages.\n\n🔍 How it works:\n• User pastes a website URL into the clean Lovable frontend\n• Webhook triggers the n8n automation pipeline\n• HTTP Request node crawls the homepage and key pages (contact, about, footer links)\n• Code in JavaScript node parses and extracts all valid email addresses, removes duplicates, and cleans the output\n• Results are simultaneously:\n  📊 Appended to a Google Sheet for record keeping\n  📧 Sent directly to the user's Gmail inbox with all extracted emails listed\n\n✅ Output delivered includes:\n• All valid, deduplicated email addresses found\n• Clean JSON payload ready for workflow integration\n• Instant Gmail notification: 'Your Generated Emails from the Website'\n\n🛠 Built With:\nLovable (frontend UI), n8n (automation workflow), Webhook trigger, HTTP Request, JavaScript code node, Google Sheets, Gmail — fully automated end-to-end with zero manual steps.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / SaaS"},
+                    {"label": "Stack", "value": "n8n, Lovable, Gmail API"},
+                    {"label": "Output", "value": "Gmail + Google Sheets"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["urlem3.png", "urlem4.png", "urlem1.png", "urlem2.png"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 09 (CanvasHouse App) ── -->
+        <div class="project-card fade-up" data-category="appdev" style="transition-delay:0.8s" onclick="openModal(this)">
+            <img src="app1.jpg" alt="CanvasHouse App preview" class="project-thumb">
+            <div class="project-number">09 / APP DEVELOPMENT</div>
+            <div class="project-title">CanvasHouse</div>
+            <p class="project-desc">A paint & hardware shop Android app built from scratch with Java, Android Studio & Firebase — covering UI design, auth & real-time database.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">Java</span>
+                    <span class="tag">Android Studio</span>
+                    <span class="tag">Firebase</span>
+                    <span class="tag green">Android</span>
+                    <span class="tag green">Mobile App</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "09 / APP DEVELOPMENT",
+                "title": "CanvasHouse",
+                "tags": [
+                    {"label": "Java", "type": "blue"},
+                    {"label": "Android Studio", "type": "blue"},
+                    {"label": "Firebase", "type": "blue"},
+                    {"label": "Android", "type": "green"},
+                    {"label": "Mobile App", "type": "green"},
+                    {"label": "UI Design", "type": "green"}
+                ],
+                "desc": "CanvasHouse is a paint and hardware shop Android application developed from scratch using Java and Android Studio. This project was an incredible learning experience that significantly enhanced skills in Android development, user interface design, and problem-solving. The app integrates Firebase for real-time database management, user authentication, and cloud storage — providing a seamless and dynamic shopping experience. Features include product listings, categories, user login and registration, and a clean, intuitive UI tailored for a paint and hardware retail context.",
+                "meta": [
+                    {"label": "Platform", "value": "Android"},
+                    {"label": "Language", "value": "Java"},
+                    {"label": "Backend", "value": "Firebase"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "image": "app1.jpg",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 10 (Bangladesh 2.0) ── -->
+        <div class="project-card fade-up" data-category="appdev" style="transition-delay:0.9s" onclick="openModal(this)">
+            <img src="bd2_0.jpg" alt="Bangladesh 2.0 App preview" class="project-thumb">
+            <div class="project-number">10 / APP DEVELOPMENT</div>
+            <div class="project-title">Bangladesh 2.0</div>
+            <p class="project-desc">A comprehensive Android platform for protester verification & historical archives — built in tribute to the Bangladesh July–August Revolution.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">Java</span>
+                    <span class="tag">Android Studio</span>
+                    <span class="tag">Firebase</span>
+                    <span class="tag green">Social Impact</span>
+                    <span class="tag green">Mobile App</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "10 / APP DEVELOPMENT",
+                "title": "Bangladesh 2.0",
+                "tags": [
+                    {"label": "Java", "type": "blue"},
+                    {"label": "Android Studio", "type": "blue"},
+                    {"label": "Firebase", "type": "blue"},
+                    {"label": "Android", "type": "green"},
+                    {"label": "Social Impact", "type": "green"},
+                    {"label": "Mobile App", "type": "green"}
+                ],
+                "desc": "Bangladesh 2.0 is a comprehensive Android platform built as a tribute to the brave souls who fought for freedom, justice, and a better tomorrow during the Bangladesh July–August Revolution. The app serves as a protester verification and historical archive system with the following features:\n\n🛡️ User Registration & Authentication — Secure sign-up, login, profile editing, and account management.\n\n✅ Protester Verification System — Registration, submission, and admin approval workflows for verified protesters.\n\n📢 Protester Profiles & Interaction — Browse verified protesters with direct calling and messaging support.\n\n📜 Document & Memory Archive — View historical documents, protest memories, and martyr details.\n\n📂 Category Management — Organized browsing of protest-related categories with admin controls.\n\n🖥️ Admin Control Panel — Full user and document management with protester request approval system.\n\n🔒 Security & Account Management — Secure logout, optimized data storage and retrieval.",
+                "meta": [
+                    {"label": "Platform", "value": "Android"},
+                    {"label": "Language", "value": "Java"},
+                    {"label": "Backend", "value": "Firebase"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "image": "bd2_0.jpg",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 11 (Messenger AI Chatbot) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.0s" onclick="openModal(this)">
+            <img src="me1.png" alt="Messenger AI Chatbot workflow preview" class="project-thumb">
+            <div class="project-number">11 / AI AUTOMATION</div>
+            <div class="project-title">Messenger Chatbot — Achar Dukan</div>
+            <p class="project-desc">A fully automated Facebook Messenger AI chatbot for a custom pickle shop — powered by OpenAI, PostgreSQL memory, and real-time order management via Google Sheets.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">PostgreSQL</span>
+                    <span class="tag green">Chatbot</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "11 / AI AUTOMATION",
+                "title": "Messenger AI Chatbot — Custom Achar Dukan",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "PostgreSQL", "type": "blue"},
+                    {"label": "Facebook Messenger", "type": "blue"},
+                    {"label": "Webhook", "type": "blue"},
+                    {"label": "Google Sheets", "type": "blue"},
+                    {"label": "HTTP Request", "type": "blue"},
+                    {"label": "AI Agent", "type": "green"},
+                    {"label": "Chatbot", "type": "green"},
+                    {"label": "AI Automation", "type": "green"}
+                ],
+                "desc": "A fully automated, AI-powered Facebook Messenger chatbot built for a custom pickle shop (Achar Dukan) — handling customer conversations, product inquiries, order placement, and complaints entirely in Bengali and English, with zero human intervention.\n\n🤖 How the AI Agent works:\n• Customer sends a message on Facebook Messenger\n• Webhook (POST) receives the message and routes it to the AI Agent in n8n\n• OpenAI Chat Model processes the conversation with persistent memory via PostgreSQL — so the bot remembers previous messages in the same session\n• The AI Agent has 4 specialized tools connected to Google Sheets:\n  🛍️ Get Product Details — reads product catalog with IDs, names & prices\n  📦 Order Place Tool — appends new customer orders to the orders sheet\n  🔄 Update SKU (Stock) — updates stock levels after orders are placed\n  📊 Stock Tool — reads current stock availability in real time\n\n💬 What the chatbot can do:\n• Answer product questions (price, availability, varieties)\n• Accept orders with customer name, address & delivery location in Bengali\n• Update stock automatically after each order\n• Share hotline number and handle complaints gracefully\n• Respond in natural Bengali — 'আমাদের হটলাইন নম্বর হলো ০১৬১৫৫০৪১৪৯'\n• Seamlessly manage the full customer journey from inquiry to order confirmation\n\n📡 Tech Architecture:\nWebhook → AI Agent (OpenAI GPT + PostgreSQL memory) → Google Sheets tools (read/append/update) → Respond to Webhook → Facebook Graph API (HTTP Request)",
+                "meta": [
+                    {"label": "Platform", "value": "Facebook Messenger"},
+                    {"label": "Stack", "value": "n8n, OpenAI, PostgreSQL"},
+                    {"label": "Memory", "value": "PostgreSQL (persistent chat)"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["me1.png", "me2.png"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 12 (LinkedIn Post Generator) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.1s" onclick="openModal(this)">
+            <img src="multi_linkedin_post.png" alt="LinkedIn Post Generator workflow" class="project-thumb">
+            <div class="project-number">12 / AI AUTOMATION</div>
+            <div class="project-title">LinkedIn Post Generator</div>
+            <p class="project-desc">A multi-AI-agent pipeline that researches a topic, writes a viral LinkedIn post, refines it for tone & formatting, and auto-publishes — powered by Google Gemini.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">Google Gemini</span>
+                    <span class="tag">LinkedIn API</span>
+                    <span class="tag green">AI Agents</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "12 / AI AUTOMATION",
+                "title": "LinkedIn Post Generator — Multi-Agent AI Pipeline",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "Google Gemini", "type": "blue"},
+                    {"label": "LinkedIn API", "type": "blue"},
+                    {"label": "HTTP Request", "type": "blue"},
+                    {"label": "AI Agents", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Content Generation", "type": "green"}
+                ],
+                "desc": "A sophisticated multi-agent AI automation pipeline that takes a topic or idea from a form submission and turns it into a fully polished, published LinkedIn post — completely automatically.\n\n🤖 Three-Agent Architecture:\n\n🧠 AI Agent 1 — Research & Draft:\n• Triggered on form submission with the topic/idea\n• Powered by Google Gemini Chat Model (shared across all agents)\n• Researches the topic deeply and generates a raw first draft of the LinkedIn post\n• Focuses on extracting key insights, hooks, and valuable takeaways\n\n✍️ AI Agent 2 — Writing & Structuring:\n• Receives the draft from Agent 1\n• Rewrites and structures the post for maximum LinkedIn engagement\n• Applies storytelling, proper formatting (line breaks, bullet points), strong opening hook, and a compelling call-to-action\n• Optimizes post length and readability for the LinkedIn algorithm\n\n🎯 AI Agent 3 — Final Polish & Tone:\n• Receives the structured post from Agent 2\n• Performs final quality check — refines tone, adds relevant hashtags, ensures the post sounds human and authentic\n• Eliminates AI-sounding phrases and makes the content feel personal and professional\n\n📡 Publishing Pipeline:\n• HTTP Request node calls the LinkedIn API with the final post content\n• LinkedIn 'Create a post' node publishes directly to the connected LinkedIn profile\n• Entire flow from idea to published post runs in seconds with zero manual effort\n\n🚀 Use Case: Ideal for professionals, founders, and content creators who want to maintain a consistent LinkedIn presence without spending hours writing posts.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / Content"},
+                    {"label": "Stack", "value": "n8n, Google Gemini, LinkedIn API"},
+                    {"label": "Agents", "value": "3 chained AI Agents"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["multi_linkedin_post.png"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 13 (AI Email Classifier & Auto-Reply) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.2s" onclick="openModal(this)">
+            <img src="email_c.png" alt="AI Email Classifier workflow" class="project-thumb">
+            <div class="project-number">13 / AI AUTOMATION</div>
+            <div class="project-title">AI Email Classifier & Auto-Reply</div>
+            <p class="project-desc">An intelligent Gmail automation that reads incoming emails, classifies them (Cricket, Internship, Priority, Sponsorship, Other), labels them automatically, and sends context-aware AI replies.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">Google Gemini</span>
+                    <span class="tag">Gmail API</span>
+                    <span class="tag green">AI Agent</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "13 / AI AUTOMATION",
+                "title": "AI Email Classifier & Smart Auto-Reply System",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "Google Gemini", "type": "blue"},
+                    {"label": "Gmail API", "type": "blue"},
+                    {"label": "Text Classifier", "type": "blue"},
+                    {"label": "Structured Output Parser", "type": "blue"},
+                    {"label": "AI Agent", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Email Automation", "type": "green"}
+                ],
+                "desc": "A fully automated intelligent email management system that reads every incoming Gmail, understands its content, classifies it into the right category, applies a Gmail label, and fires back a smart, context-aware reply — all without touching the inbox manually.\n\n📬 Full Pipeline Breakdown:\n\n📥 Gmail Trigger:\n• Watches the inbox in real-time — fires instantly when a new email arrives\n\n🧠 Information Extractor (Gemini):\n• Google Gemini Chat Model reads the raw email content\n• Extracts structured information: sender intent, subject context, key details\n• Passes clean data downstream via an If condition to route accordingly\n• Edit Fields nodes normalize and prepare the data before merging\n\n🏷️ Text Classifier (Gemini):\n• A second Google Gemini model classifies the email into one of 5 categories:\n  🏏 Cricket — sports/cricket-related messages\n  🎓 Internship — job applications and internship requests\n  🔴 Priority — urgent or important messages needing fast response\n  🤝 Sponsorship — brand deal and sponsorship inquiries\n  📁 Other — everything else\n\n🔖 Add Label to Message:\n• Automatically applies the matching Gmail label to organize the inbox\n• Labels are color-coded and visible instantly in Gmail\n\n🤖 AI Agent (Gemini + Structured Output Parser):\n• The AI Agent receives the classified email with full context\n• Google Gemini Chat Model2 generates a personalized, intelligent reply based on the email category and content\n• Structured Output Parser ensures the reply is clean, properly formatted, and ready to send\n\n📤 Send a Message:\n• Final Gmail node sends the AI-generated reply directly to the original sender\n• The entire flow — from email received to reply sent — runs in seconds automatically\n\n💡 Real-world Impact: Eliminates inbox overwhelm, auto-organizes emails by category, and ensures every sender gets a thoughtful, relevant response instantly.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / Email"},
+                    {"label": "Stack", "value": "n8n, Google Gemini, Gmail"},
+                    {"label": "Categories", "value": "Cricket, Internship, Priority, Sponsorship, Other"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["email_c.png"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 14 (Human in the Loop) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.3s" onclick="openModal(this)">
+            <img src="hu1.png" alt="Human in the Loop workflow" class="project-thumb">
+            <div class="project-number">14 / AI AUTOMATION</div>
+            <div class="project-title">Human-in-the-Loop: YouTube → LinkedIn</div>
+            <p class="project-desc">A scheduled AI pipeline that fetches YouTube playlist videos, summarizes them with OpenAI, emails a human for approval, then auto-posts approved content to LinkedIn.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">YouTube API</span>
+                    <span class="tag green">Human-in-the-Loop</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "14 / AI AUTOMATION",
+                "title": "Human-in-the-Loop: YouTube to LinkedIn Post Automation",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "YouTube API", "type": "blue"},
+                    {"label": "Gmail", "type": "blue"},
+                    {"label": "LinkedIn API", "type": "blue"},
+                    {"label": "JavaScript", "type": "blue"},
+                    {"label": "Human-in-the-Loop", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Content Automation", "type": "green"}
+                ],
+                "desc": "A sophisticated AI automation pipeline that combines the power of AI content generation with human judgment — ensuring every LinkedIn post is reviewed and approved before it goes live. This is the Human-in-the-Loop design pattern in action.\n\n⏰ Schedule Trigger:\n• The workflow runs automatically on a defined schedule (daily/weekly)\n• No manual trigger needed — the pipeline wakes up and runs itself\n\n📺 YouTube Playlist Fetcher:\n• Get Many Playlist Items node fetches all videos from a YouTube playlist via the YouTube API\n• Code in JavaScript extracts and cleans the video data\n• video_id node isolates each video ID for processing\n• Loop Over Items iterates through each video one by one\n\n🌐 HTTP Request — Transcript Fetch:\n• For each video, an HTTP Request fetches the video transcript or metadata from YouTube\n• Feeds raw video content into the AI pipeline\n\n🤖 AI Agent (OpenAI):\n• First OpenAI Chat Model agent processes the video transcript\n• Extracts key insights, angles, and talking points\n• Drafts a raw LinkedIn post based on the video content\n\n📝 Summary Agent (OpenAI):\n• A second dedicated OpenAI Chat Model (summary agent) refines the draft\n• Polishes the post for LinkedIn — hook, body, hashtags, CTA\n• Ensures the tone is professional, engaging, and human-sounding\n\n📧 Human Review — Send Message & Wait:\n• The 'Send message and wait for response' node emails the generated post to a human reviewer via Gmail\n• The workflow PAUSES here — it waits for the human to respond\n• Human can Reply 'Approve' to publish or 'Reject' to discard\n• This is the Human-in-the-Loop checkpoint that prevents bad content from going live\n\n🔀 Switch Node — Decision Router:\n• Reads the human's email reply\n• Routes to 'Create a post' if approved\n• Silently stops the workflow if rejected\n\n🔵 LinkedIn — Create a Post:\n• If approved, the polished AI-written post is published directly to LinkedIn\n• Zero copy-paste, zero manual login — fully automated publishing\n\n💡 Why Human-in-the-Loop matters:\nAI is powerful but not perfect. This design ensures a human always has final say before content reaches the audience — combining AI speed with human quality control.",
+                "meta": [
+                    {"label": "Type", "value": "Human-in-the-Loop Automation"},
+                    {"label": "Stack", "value": "n8n, OpenAI, YouTube, Gmail, LinkedIn"},
+                    {"label": "Pattern", "value": "AI Draft → Human Review → Auto-Publish"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["hu1.png"],
+                "video": ["hu3.webm", "hu2.webm"],
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 15 (Stock Analysis AI Agent) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.4s" onclick="openModal(this)">
+            <img src="stock1.png" alt="AI Stock Analysis Agent workflow" class="project-thumb">
+            <div class="project-number">15 / AI AUTOMATION</div>
+            <div class="project-title">AI Stock Analysis Agent</div>
+            <p class="project-desc">An AI-powered stock research automation that fetches live market data, analyzes trends, generates investment insights, and delivers structured reports — fully automated.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">Telegram</span>
+                    <span class="tag green">AI Agent</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "15 / AI AUTOMATION",
+                "title": "AI Stock Analysis Agent",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "Telegram Bot", "type": "blue"},
+                    {"label": "Simple Memory", "type": "blue"},
+                    {"label": "Stock Agent Tool", "type": "blue"},
+                    {"label": "AI Agent", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "Financial Analysis", "type": "green"}
+                ],
+                "desc": "An intelligent AI automation pipeline that acts as a personal stock market analyst — accessible directly from Telegram. Just send a stock symbol or question, and the AI Agent returns a detailed, structured investment analysis in seconds.\n\n📡 Pipeline Architecture:\n• Telegram Trigger listens for incoming messages from users\n• Message is passed to the AI Agent powered by OpenAI Chat Model\n• Simple Memory keeps track of conversation context for follow-up questions\n• Call 'stock agent-2' Tool fetches live stock data and market metrics\n• AI Agent processes the data, applies financial reasoning, and generates analysis\n• Send a text message node delivers the structured report back to Telegram\n\n📈 What the AI Stock Agent analyzes:\n• Live stock price, volume, and market cap data\n• Price trends, momentum signals, and moving averages\n• Bullish and bearish pattern detection\n• Key risk factors and potential opportunities\n• Human-readable investment insights and summaries\n\n💬 Telegram Interface:\n• Users interact via natural language — 'Analyze AAPL' or 'What's the trend for TSLA?'\n• Conversational memory means the agent remembers previous questions in the session\n• Instant replies delivered directly to Telegram chat\n\n💡 Use Case:\nDesigned for investors, traders, and finance enthusiasts who want instant AI-powered stock insights on the go — no dashboards, no manual research, just ask and get answers.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / Finance"},
+                    {"label": "Stack", "value": "n8n, OpenAI, Telegram"},
+                    {"label": "Interface", "value": "Telegram Bot"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["stock1.png"],
+                "video": "stock.mp4",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 16 (Shopify AI Store Manager) ── -->
+        <div class="project-card fade-up" data-category="automation" style="transition-delay:1.5s" onclick="openModal(this)">
+            <img src="shopify1.png" alt="Shopify AI Store Manager workflow" class="project-thumb">
+            <div class="project-number">16 / AI AUTOMATION</div>
+            <div class="project-title">Shopify AI Store Manager</div>
+            <p class="project-desc">A conversational AI Agent that manages a full Shopify store via chat — get products, create listings, update orders, and delete products using plain language commands.</p>
+            <div class="project-footer">
+                <div class="tags">
+                    <span class="tag">n8n</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">Shopify API</span>
+                    <span class="tag green">AI Agent</span>
+                    <span class="tag green">AI Automation</span>
+                </div>
+            </div>
+            <div class="view-hint">View details</div>
+            <script type="application/json" class="modal-data">{
+                "number": "16 / AI AUTOMATION",
+                "title": "Shopify AI Store Manager Agent",
+                "tags": [
+                    {"label": "n8n", "type": "blue"},
+                    {"label": "OpenAI", "type": "blue"},
+                    {"label": "Shopify API", "type": "blue"},
+                    {"label": "Chat Trigger", "type": "blue"},
+                    {"label": "AI Agent", "type": "green"},
+                    {"label": "AI Automation", "type": "green"},
+                    {"label": "E-Commerce", "type": "green"}
+                ],
+                "desc": "A powerful conversational AI Agent that gives you full control over your Shopify store through natural language chat — no dashboard clicks, no manual product management, just type what you need.\n\n🛒 How it works:\n• 'When chat message received' trigger listens for incoming chat messages\n• Message is routed to the AI Agent powered by OpenAI Chat Model\n• The agent has access to 5 Shopify tools and decides which to call based on your request\n• Result is returned as a clear, structured chat response\n\n🔧 5 Shopify Tools the AI Agent controls:\n\n📦 Get Many Products in Shopify\n• Fetches a list of products from the store with details\n• Supports filters — 'show me all active products under $50'\n\n📋 Get All Product Orders\n• Retrieves all orders for a specific product\n• Useful for tracking sales and fulfillment status\n\n✏️ Create a Product\n• Adds a brand new product listing to the Shopify store\n• Set title, description, price, and variants via chat\n\n🔄 Update Order\n• Modifies existing orders — update status, shipping info, or details\n• 'Mark order #1023 as fulfilled' — done instantly\n\n🗑️ Delete a Product in Shopify\n• Removes a product from the store permanently\n• 'Delete the blue hoodie listing' — agent finds and deletes it\n\n💡 Real-world Impact:\nInstead of navigating Shopify's admin panel for every small task, store owners can simply chat with their AI store manager — saving hours of manual work every week and enabling non-technical users to manage their store entirely through conversation.",
+                "meta": [
+                    {"label": "Type", "value": "AI Automation / E-Commerce"},
+                    {"label": "Stack", "value": "n8n, OpenAI, Shopify API"},
+                    {"label": "Interface", "value": "Chat (n8n Chat Trigger)"},
+                    {"label": "Status", "value": "Completed"}
+                ],
+                "images": ["shopify1.png"],
+                "video": "shopify.webm",
+                "placeholder": false
+            }</script>
+        </div>
+
+        <!-- ── Project 17 (Voice Agent - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:1.6s" onclick="openModal(this)">
+            <div class="project-number">17 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">AI Voice Agent</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">Real-time voice-powered AI agent — call handling, speech-to-text, intent detection & automated responses.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "17 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 18 (CRM AI Agent - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:1.7s" onclick="openModal(this)">
+            <div class="project-number">18 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">CRM AI Agent</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">Intelligent CRM automation — auto-qualify leads, update records, send follow-ups & manage pipelines via AI.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "18 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 19 (WhatsApp Chatbot - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:1.8s" onclick="openModal(this)">
+            <div class="project-number">19 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">WhatsApp AI Chatbot</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">AI-powered WhatsApp business bot — order tracking, FAQs, lead capture & smart customer support at scale.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "19 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 20 (FB Auto Comment - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:1.9s" onclick="openModal(this)">
+            <div class="project-number">20 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">Facebook Auto Comment Bot</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">Monitors Facebook posts & auto-replies to comments using AI — context-aware, brand-consistent responses 24/7.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "20 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 21 (AI Meeting Summarizer - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:2.0s" onclick="openModal(this)">
+            <div class="project-number">21 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">AI Meeting Summarizer</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">Auto-transcribes meetings, extracts action items, assigns tasks & sends summary emails to all attendees instantly.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "21 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 22 (AI Invoice Processor - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:2.1s" onclick="openModal(this)">
+            <div class="project-number">22 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">AI Invoice Processor</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">Reads incoming invoice emails, extracts data using AI vision, validates amounts & logs to accounting sheets automatically.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "22 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+        <!-- ── Project 23 (Instagram DM Automation - Coming Soon) ── -->
+        <div class="project-card placeholder fade-up" data-category="automation" style="transition-delay:2.2s" onclick="openModal(this)">
+            <div class="project-number">23 / AI AUTOMATION</div>
+            <div class="project-title" style="color:var(--muted)">Instagram DM Automation</div>
+            <p class="project-desc" style="color:var(--dim);font-style:italic">AI-powered Instagram DM bot — auto-replies to story mentions, new followers & keyword triggers for business growth.</p>
+            <div class="project-placeholder-label">coming soon</div>
+            <script type="application/json" class="modal-data">{"placeholder": true, "number": "23 / AI AUTOMATION", "title": "Coming Soon"}</script>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <p class="footer-copy">© 2026 Md. Miner Hossain Rimon</p>
+            <p class="footer-made">Powered by <span>AI &amp; Innovation</span></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    /* ── Scroll animations ── */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    /* ── Filter ── */
+    function filterProjects(category, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.project-card').forEach(card => {
+            const cats = card.dataset.category || '';
+            if (category === 'all' || cats.includes(category)) {
+                card.style.display = 'flex';
+                setTimeout(() => card.style.opacity = '1', 10);
+            } else {
+                card.style.opacity = '0';
+                setTimeout(() => card.style.display = 'none', 300);
+            }
+        });
+    }
+
+    /* ── Modal ── */
+    function openModal(card) {
+        const raw = card.querySelector('.modal-data');
+        if (!raw) return;
+        const data = JSON.parse(raw.textContent);
+        const body = document.getElementById('modal-body');
+
+        if (data.placeholder) {
+            body.innerHTML = `
+                <div class="modal-number">${data.number}</div>
+                <div class="modal-title" style="color:var(--muted)">${data.title}</div>
+                <div class="modal-divider"></div>
+                <div class="modal-placeholder">
+                    <div class="modal-placeholder-icon">🚧</div>
+                    <p class="modal-placeholder-text">This project hasn't been added yet.<br>Check back soon for details!</p>
+                </div>`;
+        } else {
+            const tagsHTML = (data.tags || []).map(t =>
+                `<span class="tag ${t.type === 'green' ? 'green' : ''}">${t.label}</span>`
+            ).join('');
+
+            const metaHTML = (data.meta || []).map(m => `
+                <div class="modal-meta-item">
+                    <div class="modal-meta-label">${m.label}</div>
+                    <div class="modal-meta-value">${m.value}</div>
+                </div>`
+            ).join('');
+
+            const actionsHTML = data.link
+                ? `<a href="${data.link}" target="_blank" class="btn btn-primary">View Project ↗</a>`
+                : `<button class="btn btn-outline" onclick="closeModal()">Close</button>`;
+
+            // Support both single image and images array (gallery)
+            let imageHTML = '';
+            if (data.images && data.images.length > 0) {
+                const thumbs = data.images.map((src, i) =>
+                    `<img src="${src}" alt="screenshot ${i+1}" class="gallery-thumb ${i===0?'gallery-active':''}" onclick="switchGallery(this, '${src}')">`
+                ).join('');
+                imageHTML = `
+                    <div class="modal-gallery" style="margin-bottom:2rem;">
+                        <img id="gallery-main" src="${data.images[0]}" alt="${data.title}" class="gallery-main">
+                        <div class="gallery-strip">${thumbs}</div>
+                    </div>`;
+            } else if (data.image) {
+                imageHTML = `<img src="${data.image}" alt="${data.title}" style="width:100%;border-radius:10px;border:1px solid var(--border);margin-bottom:2rem;display:block;">`;
+            }
+
+            // Video support — single or array, plays sequentially
+            let videoHTML = '';
+            let videoSrcs = [];
+            if (data.video) {
+                const getType = src => src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+                videoSrcs = Array.isArray(data.video) ? data.video : [data.video];
+                const clipBtns = videoSrcs.length > 1
+                    ? `<div id="vclip-bar" style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap;">
+                        ${videoSrcs.map((s,i) => `<span id="vclip-${i}" onclick="switchVideoClip(${i})" style="cursor:pointer;padding:0.25rem 0.75rem;border-radius:5px;border:1px solid ${i===0?'var(--green)':'var(--border)'};color:${i===0?'var(--green)':'var(--dim)'};font-family:var(--font-mono);font-size:0.7rem;transition:all 0.2s;">Clip ${i+1}</span>`).join('')}
+                      </div>` : '';
+                videoHTML = `<div style="margin-bottom:2rem;">
+                    <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">▶ Demo Video</div>
+                    <video id="demo-video" controls style="width:100%;border-radius:10px;border:1px solid var(--border);display:block;background:#000;">
+                        <source id="demo-video-src" src="${videoSrcs[0]}" type="${getType(videoSrcs[0])}">
+                    </video>
+                    ${clipBtns}
+                </div>`;
+            }
+
+            body.innerHTML = `
+                <div class="modal-number">${data.number}</div>
+                <div class="modal-title">${data.title}</div>
+                <div class="modal-tags">${tagsHTML}</div>
+                <div class="modal-divider"></div>
+                ${imageHTML}
+                ${videoHTML}
+                <p class="modal-desc">${data.desc.replace(/\n\n/g, '<br><br>')}</p>
+                ${metaHTML ? `<div class="modal-meta-grid">${metaHTML}</div>` : ''}
+                <div class="modal-actions">${actionsHTML}</div>`;
+
+            // Init multi-clip video player AFTER innerHTML is set
+            if (videoSrcs.length > 0) {
+                window._vSrcs = videoSrcs;
+                window._vCur = 0;
+                const vid = document.getElementById('demo-video');
+                if (vid) {
+                    vid.load(); // force browser to read the <source> tag
+                    vid.addEventListener('ended', function() {
+                        if (window._vCur + 1 < window._vSrcs.length) {
+                            switchVideoClip(window._vCur + 1);
+                        }
+                    });
+                }
+            }
+        }
+
+        const backdrop = document.getElementById('modal-backdrop');
+        backdrop.classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-backdrop').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+
+    function handleBackdropClick(e) {
+        if (e.target === document.getElementById('modal-backdrop')) closeModal();
+    }
+
+    /* Close with Escape key */
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* Multi-clip video switcher */
+    function switchVideoClip(i) {
+        const srcs = window._vSrcs;
+        if (!srcs) return;
+        const getType = src => src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+        window._vCur = i;
+        const vid = document.getElementById('demo-video');
+        const src = document.getElementById('demo-video-src');
+        if (vid && src) {
+            src.src = srcs[i];
+            src.type = getType(srcs[i]);
+            vid.load();
+            vid.play();
+        }
+        srcs.forEach((_, j) => {
+            const el = document.getElementById('vclip-' + j);
+            if (el) {
+                el.style.borderColor = j === i ? 'var(--green)' : 'var(--border)';
+                el.style.color = j === i ? 'var(--green)' : 'var(--dim)';
+            }
+        });
+    }
+
+    /* Gallery switcher */
+    function switchGallery(thumb, src) {
+        const main = document.getElementById('gallery-main');
+        main.style.opacity = '0';
+        setTimeout(() => {
+            main.src = src;
+            main.style.opacity = '1';
+        }, 150);
+        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-active'));
+        thumb.classList.add('gallery-active');
+    }
+</script>
+</body>
+</html>

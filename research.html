@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research — Rimon.dev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg:           #04060f;
+      --surface:      rgba(255,255,255,0.03);
+      --surface2:     rgba(255,255,255,0.06);
+      --border:       rgba(255,255,255,0.08);
+      --border-green: rgba(0,255,136,0.35);
+      --border-blue:  rgba(59,130,246,0.3);
+      --border-pink:  rgba(244,114,182,0.35);
+      --green:  #00ff88;
+      --blue:   #3b82f6;
+      --pink:   #f472b6;
+      --amber:  #f59e0b;
+      --text:   #f0f4ff;
+      --muted:  #6b7a99;
+      --dim:    #3d4a66;
+      --font-display: 'Clash Display', sans-serif;
+      --font-body:    'Cabinet Grotesk', sans-serif;
+      --font-serif:   'Instrument Serif', Georgia, serif;
+      --font-mono:    'Fira Code', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.025; pointer-events: none; z-index: 0;
+    }
+
+    .glow { position:fixed; border-radius:50%; pointer-events:none; filter:blur(140px); z-index:0; }
+    .g1 { width:520px; height:520px; background:rgba(0,255,136,0.07);  top:-140px; right:-120px; }
+    .g2 { width:600px; height:600px; background:rgba(59,130,246,0.05); bottom:-100px; left:-180px; }
+    .g3 { width:380px; height:380px; background:rgba(244,114,182,0.04); top:50%; left:42%; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      padding: 1.25rem 0;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      background: rgba(4,6,15,0.75);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.25rem; color: var(--green);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--muted); font-weight: 400; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      font-family: var(--font-body); color: var(--muted);
+      text-decoration: none; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.02em; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); }
+    @media (max-width:500px) { .nav-links { display:none; } }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+
+    /* ── PAGE HERO ── */
+    .page-hero { padding: 6rem 0 4rem; }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--green); letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-label::before { content:''; width:28px; height:1px; background:var(--green); flex-shrink:0; }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1.0;
+      color: var(--text); margin-bottom: 1.25rem;
+    }
+    .page-title .accent { color: var(--green); }
+
+    .page-subtitle {
+      font-family: var(--font-serif);
+      font-style: italic; font-size: 1.2rem;
+      color: var(--muted); line-height: 1.8;
+      max-width: 580px; margin-bottom: 2.5rem;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: flex; gap: 2.5rem; flex-wrap: wrap;
+      padding: 1.5rem 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: fit-content;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--font-display); font-size: 2rem;
+      font-weight: 700; color: var(--green); line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin: 0; }
+
+    /* ── RESEARCH AREA HEADER ── */
+    .area-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 3.5rem 0 2rem;
+    }
+    .area-num {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--dim); letter-spacing: 0.12em;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--dim);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .area-title {
+      font-family: var(--font-display); font-size: 1.6rem;
+      font-weight: 700; letter-spacing: -0.02em; color: var(--text);
+    }
+    .area-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── PUBLISHED PAPER CARD ── */
+    .paper-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      margin-bottom: 1.5rem;
+    }
+    .paper-card:hover {
+      border-color: var(--border-green);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,255,136,0.06);
+    }
+
+    .paper-card-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      padding: 2.25rem 2.5rem;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .paper-card-inner { grid-template-columns: 1fr; } }
+
+    /* Top accent line */
+    .paper-card::before {
+      content: ''; display: block;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--blue), var(--pink));
+    }
+
+    .paper-meta-row {
+      display: flex; gap: 0.75rem; align-items: center;
+      flex-wrap: wrap; margin-bottom: 1rem;
+    }
+
+    .paper-badge {
+      padding: 0.25rem 0.75rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      border-radius: 100px;
+    }
+    .badge-published {
+      background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.25); color: var(--green);
+    }
+    .badge-arxiv {
+      background: rgba(244,114,182,0.1); border: 1px solid rgba(244,114,182,0.25); color: var(--pink);
+    }
+    .badge-date {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+    }
+
+    .paper-title {
+      font-family: var(--font-display); font-size: 1.35rem;
+      font-weight: 700; letter-spacing: -0.02em; color: var(--text);
+      line-height: 1.35; margin-bottom: 1rem;
+    }
+
+    .paper-abstract {
+      font-family: var(--font-body); color: var(--muted);
+      font-size: 0.93rem; line-height: 1.85;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Key findings */
+    .findings-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem; margin-bottom: 1.5rem;
+    }
+    .finding-item {
+      padding: 0.85rem 1rem;
+      background: rgba(0,255,136,0.04);
+      border: 1px solid rgba(0,255,136,0.12);
+      border-radius: 10px;
+    }
+    .finding-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .finding-value { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--green); }
+    .finding-desc { font-family: var(--font-body); font-size: 0.8rem; color: var(--muted); }
+
+    .paper-tags { display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom: 1.5rem; }
+    .tag {
+      padding: 0.28rem 0.75rem;
+      font-family: var(--font-mono); font-size: 0.73rem;
+      border-radius: 6px;
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.18); color: #93c5fd;
+      transition: all 0.2s;
+    }
+    .tag.green { background: rgba(0,255,136,0.07); border-color: rgba(0,255,136,0.18); color: #6ee7b7; }
+    .tag.pink  { background: rgba(244,114,182,0.07); border-color: rgba(244,114,182,0.18); color: #f9a8d4; }
+
+    .paper-links { display:flex; gap:0.75rem; flex-wrap:wrap; }
+    .paper-link {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.65rem 1.25rem;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .link-primary {
+      background: var(--green); color: #04060f;
+    }
+    .link-primary:hover { background: #00e07a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,255,136,0.25); }
+    .link-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .link-outline:hover { border-color: var(--border-green); color: var(--green); transform: translateY(-2px); }
+
+    /* Right sidebar of paper card */
+    .paper-sidebar {
+      display: flex; flex-direction: column; gap: 1rem;
+      min-width: 180px;
+    }
+    .sidebar-item {
+      padding: 1rem 1.25rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .sidebar-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .sidebar-value { font-family: var(--font-body); font-size: 0.92rem; font-weight: 600; color: var(--text); }
+
+    /* ── COMING SOON CARD ── */
+    .coming-card {
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      background: var(--surface);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .coming-card:hover { border-color: rgba(255,255,255,0.15); }
+
+    .coming-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(59,130,246,0.04), transparent);
+      pointer-events: none;
+    }
+
+    .coming-inner { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+
+    .coming-icon {
+      width: 60px; height: 60px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+      border: 1px dashed var(--border);
+      background: var(--surface2);
+      opacity: 0.7;
+    }
+
+    .coming-body { flex: 1; min-width: 0; }
+
+    .coming-badge {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 100px;
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+    .coming-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: pulse2 2.5s infinite; }
+    @keyframes pulse2 {
+      0%,100% { opacity:1; } 50% { opacity:0.3; }
+    }
+
+    .coming-title {
+      font-family: var(--font-display); font-size: 1.2rem;
+      font-weight: 700; color: var(--text); margin-bottom: 0.5rem;
+      opacity: 0.75;
+    }
+
+    .coming-desc {
+      font-family: var(--font-body); color: var(--dim);
+      font-size: 0.9rem; line-height: 1.75;
+      font-style: italic;
+      max-width: 520px;
+    }
+
+    .coming-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top: 1rem; }
+    .coming-tag {
+      padding: 0.22rem 0.65rem;
+      font-family: var(--font-mono); font-size: 0.7rem;
+      border-radius: 6px;
+      background: rgba(61,74,102,0.3); border: 1px solid var(--border);
+      color: var(--dim);
+    }
+
+    .coming-right { flex-shrink: 0; text-align: right; }
+    .coming-year {
+      font-family: var(--font-display); font-size: 2.5rem;
+      font-weight: 700; color: var(--border); letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .coming-year-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.25rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0; margin-top: 5rem;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-family: var(--font-body); color: var(--dim); font-size: 0.85rem; }
+    .footer-made { font-family: var(--font-mono); color: var(--dim); font-size: 0.82rem; }
+    .footer-made span { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .a1 { opacity:0; animation: fadeUp 0.7s ease forwards 0.1s; }
+    .a2 { opacity:0; animation: fadeUp 0.7s ease forwards 0.25s; }
+    .a3 { opacity:0; animation: fadeUp 0.7s ease forwards 0.4s; }
+    .a4 { opacity:0; animation: fadeUp 0.7s ease forwards 0.55s; }
+
+    .fade-up { opacity:0; transform:translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Rimon<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="research.html" class="active">Research</a></li>
+      <li><a href="education.html">Education</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ── PAGE HERO ── -->
+  <div class="page-hero">
+    <div class="section-label a1">Academic Research</div>
+    <h1 class="page-title a2">Research &<br><span class="accent">Publications</span></h1>
+    <p class="page-subtitle a3">
+      Advancing machine learning through applied research — from healthcare AI and predictive modeling to natural language processing and intelligent automation.
+    </p>
+    <div class="stats-row a4">
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Published</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">In Pipeline</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Research Areas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2025</div>
+        <div class="stat-label">First Pub.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="page">
+
+  <!-- ════════════════════════════════════════
+       AREA 01 — HEALTHCARE AI / DIABETES
+  ════════════════════════════════════════ -->
+  <div class="area-header fade-up">
+    <span class="area-num">01</span>
+    <h2 class="area-title">Healthcare AI &amp; Diabetes Prediction</h2>
+    <div class="area-line"></div>
+  </div>
+
+  <div class="paper-card fade-up">
+    <div class="paper-card-inner">
+      <div class="paper-left">
+        <div class="paper-meta-row">
+          <span class="paper-badge badge-published">✓ Published</span>
+          <span class="paper-badge badge-arxiv">arXiv</span>
+          <span class="paper-badge badge-date">December 9, 2025</span>
+        </div>
+
+        <h3 class="paper-title">
+          An Improved Ensemble-Based Machine Learning Model with Feature Optimization for Early Diabetes Prediction
+        </h3>
+
+        <p class="paper-abstract">
+          Diabetes mellitus is a chronic metabolic disorder affecting millions worldwide, and early prediction remains a critical clinical challenge. This study presents a novel ensemble-based machine learning framework that combines multiple classifiers with advanced feature optimization techniques to achieve superior early-stage diabetes prediction accuracy.
+          <br><br>
+          The research leverages the <strong style="color:var(--text)">2015 BRFSS (Behavioral Risk Factor Surveillance System) dataset</strong> — one of the largest health survey datasets in the U.S. — and addresses the significant class imbalance problem inherent in medical datasets using <strong style="color:var(--text)">SMOTE (Synthetic Minority Over-sampling Technique)</strong> variants. A rigorous feature selection pipeline was applied to identify the most clinically relevant predictors, reducing dimensionality while preserving predictive power.
+          <br><br>
+          The proposed ensemble model outperforms baseline classifiers including Random Forest, Gradient Boosting, and XGBoost in isolation, demonstrating the strength of combining diverse learners with optimized feature subsets for healthcare prediction tasks.
+        </p>
+
+        <div class="findings-grid">
+          <div class="finding-item">
+            <div class="finding-label">Dataset</div>
+            <div class="finding-value">BRFSS</div>
+            <div class="finding-desc">2015 CDC Health Survey</div>
+          </div>
+          <div class="finding-item">
+            <div class="finding-label">Technique</div>
+            <div class="finding-value">SMOTE</div>
+            <div class="finding-desc">Class imbalance handling</div>
+          </div>
+          <div class="finding-item">
+            <div class="finding-label">Approach</div>
+            <div class="finding-value">Ensemble</div>
+            <div class="finding-desc">Multi-classifier fusion</div>
+          </div>
+          <div class="finding-item">
+            <div class="finding-label">Goal</div>
+            <div class="finding-value">Early</div>
+            <div class="finding-desc">Pre-clinical detection</div>
+          </div>
+        </div>
+
+        <div class="paper-tags">
+          <span class="tag green">Machine Learning</span>
+          <span class="tag green">Healthcare AI</span>
+          <span class="tag green">Diabetes Prediction</span>
+          <span class="tag">Ensemble Methods</span>
+          <span class="tag">SMOTE</span>
+          <span class="tag">Feature Selection</span>
+          <span class="tag">BRFSS Dataset</span>
+          <span class="tag">XGBoost</span>
+          <span class="tag pink">arXiv Preprint</span>
+        </div>
+
+        <div class="paper-links">
+          <a class="paper-link link-primary" href="https://arxiv.org/abs/2512.02023" target="_blank" rel="noopener">
+            Read on arXiv →
+          </a>
+          <a class="paper-link link-outline" href="https://arxiv.org/pdf/2512.02023" target="_blank" rel="noopener">
+            Download PDF ↓
+          </a>
+        </div>
+      </div>
+
+      <div class="paper-sidebar">
+        <div class="sidebar-item">
+          <div class="sidebar-label">Platform</div>
+          <div class="sidebar-value">arXiv.org</div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-label">Paper ID</div>
+          <div class="sidebar-value">2512.02023</div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-label">Published</div>
+          <div class="sidebar-value">Dec 9, 2025</div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-label">Domain</div>
+          <div class="sidebar-value">Medical ML</div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-label">Status</div>
+          <div class="sidebar-value" style="color:var(--green);">✓ Live</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       AREA 02 — NLP
+  ════════════════════════════════════════ -->
+  <div class="area-header fade-up" style="transition-delay:0.05s;">
+    <span class="area-num">02</span>
+    <h2 class="area-title">Natural Language Processing</h2>
+    <div class="area-line"></div>
+  </div>
+
+  <div class="coming-card fade-up" style="transition-delay:0.1s;">
+    <div class="coming-inner">
+      <div class="coming-icon">🧠</div>
+      <div class="coming-body">
+        <div class="coming-badge"><span class="coming-dot"></span> Coming Soon</div>
+        <div class="coming-title">Sentiment Analysis for Low-Resource Bangla Text</div>
+        <p class="coming-desc">
+          An NLP research project focused on sentiment classification for Bengali (Bangla) social media content — addressing the lack of annotated datasets and robust models for low-resource South Asian languages.
+        </p>
+        <div class="coming-tags">
+          <span class="coming-tag">NLP</span>
+          <span class="coming-tag">Bangla</span>
+          <span class="coming-tag">Sentiment Analysis</span>
+          <span class="coming-tag">Low-Resource</span>
+          <span class="coming-tag">Transformers</span>
+        </div>
+      </div>
+      <div class="coming-right">
+        <div class="coming-year">2026</div>
+        <div class="coming-year-label">Expected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       AREA 03 — COMPUTER VISION
+  ════════════════════════════════════════ -->
+  <div class="area-header fade-up" style="transition-delay:0.1s;">
+    <span class="area-num">03</span>
+    <h2 class="area-title">Computer Vision &amp; Medical Imaging</h2>
+    <div class="area-line"></div>
+  </div>
+
+  <div class="coming-card fade-up" style="transition-delay:0.15s;">
+    <div class="coming-inner">
+      <div class="coming-icon">🔬</div>
+      <div class="coming-body">
+        <div class="coming-badge"><span class="coming-dot"></span> Coming Soon</div>
+        <div class="coming-title">Deep Learning for Retinal Diabetic Retinopathy Detection</div>
+        <p class="coming-desc">
+          Extending the diabetes research track into the visual domain — building convolutional neural network models for automated grading of diabetic retinopathy from fundus photographs, enabling accessible early screening.
+        </p>
+        <div class="coming-tags">
+          <span class="coming-tag">CNN</span>
+          <span class="coming-tag">Medical Imaging</span>
+          <span class="coming-tag">Retinopathy</span>
+          <span class="coming-tag">Deep Learning</span>
+          <span class="coming-tag">PyTorch</span>
+        </div>
+      </div>
+      <div class="coming-right">
+        <div class="coming-year">2026</div>
+        <div class="coming-year-label">Expected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       AREA 04 — AI AUTOMATION RESEARCH
+  ════════════════════════════════════════ -->
+  <div class="area-header fade-up" style="transition-delay:0.15s;">
+    <span class="area-num">04</span>
+    <h2 class="area-title">AI Automation &amp; Agentic Systems</h2>
+    <div class="area-line"></div>
+  </div>
+
+  <div class="coming-card fade-up" style="transition-delay:0.2s;">
+    <div class="coming-inner">
+      <div class="coming-icon">🤖</div>
+      <div class="coming-body">
+        <div class="coming-badge"><span class="coming-dot"></span> Coming Soon</div>
+        <div class="coming-title">Benchmarking LLM-Powered Workflow Automation Pipelines</div>
+        <p class="coming-desc">
+          A systematic evaluation of large language model agents in real-world automation workflows — comparing performance, reliability, and cost-efficiency across n8n, LangChain, and Langflow-based architectures for business process automation.
+        </p>
+        <div class="coming-tags">
+          <span class="coming-tag">LLM Agents</span>
+          <span class="coming-tag">n8n</span>
+          <span class="coming-tag">LangChain</span>
+          <span class="coming-tag">Benchmarking</span>
+          <span class="coming-tag">RAG</span>
+        </div>
+      </div>
+      <div class="coming-right">
+        <div class="coming-year">2026</div>
+        <div class="coming-year-label">Expected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       AREA 05 — PREDICTIVE ANALYTICS
+  ════════════════════════════════════════ -->
+  <div class="area-header fade-up" style="transition-delay:0.2s;">
+    <span class="area-num">05</span>
+    <h2 class="area-title">Predictive Analytics &amp; Data Science</h2>
+    <div class="area-line"></div>
+  </div>
+
+  <div class="coming-card fade-up" style="transition-delay:0.25s;">
+    <div class="coming-inner">
+      <div class="coming-icon">📊</div>
+      <div class="coming-body">
+        <div class="coming-badge"><span class="coming-dot"></span> Coming Soon</div>
+        <div class="coming-title">Time-Series Forecasting for Climate & Public Health Indicators in Bangladesh</div>
+        <p class="coming-desc">
+          Investigating the correlation between environmental factors — temperature, humidity, and seasonal patterns in Bangladesh — and the incidence of communicable diseases using LSTM and Transformer-based time-series forecasting models.
+        </p>
+        <div class="coming-tags">
+          <span class="coming-tag">Time Series</span>
+          <span class="coming-tag">LSTM</span>
+          <span class="coming-tag">Public Health</span>
+          <span class="coming-tag">Bangladesh</span>
+          <span class="coming-tag">Climate AI</span>
+        </div>
+      </div>
+      <div class="coming-right">
+        <div class="coming-year">2027</div>
+        <div class="coming-year-label">Expected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom padding -->
+  <div style="padding-bottom: 2rem;"></div>
+
+</div><!-- /page -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">© 2026 Md. Miner Hossain Rimon</p>
+    <p class="footer-made">Powered by <span>AI &amp; Innovation</span></p>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
